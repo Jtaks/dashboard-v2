@@ -1,0 +1,32 @@
+# Fragment for the existing Caddy site that fronts the dashboard on one origin.
+# Merge into the site block that serves https://dashboard.example.com (or your host).
+#
+# Assumptions (see deploy/INTEGRATOR.md):
+# - Authelia is reachable on the docker network as `authelia:9091`
+# - `dashboard-api` and `dashboard-client` container_name values match this fragment
+# - The socket proxy is not referenced here; the API reaches it via DOCKER_PROXY_URL
+
+# /api → authenticated API. Everything else → static client.
+@dashboard_api path /api /api/*
+
+handle @dashboard_api {
+	# Strip inbound Remote-* before forward_auth. Authelia only overwrites headers it
+	# returns; a client-supplied Remote-User would otherwise reach the API as trusted.
+	request_header {
+		-Remote-User
+		-Remote-Groups
+		-Remote-Email
+		-Remote-Name
+	}
+
+	forward_auth authelia:9091 {
+		uri /api/authz/forward-auth
+		copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+	}
+
+	reverse_proxy dashboard-api:3000
+}
+
+handle {
+	reverse_proxy dashboard-client:80
+}

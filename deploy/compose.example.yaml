@@ -1,0 +1,52 @@
+# Example stack for joining dashboard client + API to an existing docker network.
+# Usage (from repo root):
+#   docker compose -f deploy/compose.example.yaml up --build
+#
+# Replace the external network name, origins, and proxy URLs for your deployment.
+# Apply deploy/Caddyfile.fragment on the existing Caddy instance (not started here).
+
+services:
+  dashboard-api:
+    container_name: dashboard-api
+    build:
+      context: ..
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    volumes:
+      - ./config/dashboard.yaml:/config/dashboard.yaml:ro
+      - dashboard-data:/data
+    environment:
+      # TDD Deployment — every variable listed; defaults shown where the TDD defines them.
+      CONFIG_PATH: /config/dashboard.yaml
+      DATABASE_PATH: /data/dashboard.db
+      VAPID_KEYS_PATH: /config/vapid.json
+      # No TDD default — required when web push is enabled (epic F); set by the integrator.
+      VAPID_SUBJECT: mailto:admin@example.com
+      # No TDD default — read-only Engine API base URL of the existing socket proxy.
+      DOCKER_PROXY_URL: http://socket-proxy:2375
+      # No TDD default — origin accepted by the CSRF Origin check.
+      ALLOWED_ORIGIN: https://dashboard.example.com
+      # No TDD default — returned to the client as Session.logoutUrl.
+      AUTHELIA_LOGOUT_URL: https://auth.example.com/logout
+      PORT: '3000'
+      LOG_LEVEL: info
+    networks:
+      - proxy
+
+  dashboard-client:
+    container_name: dashboard-client
+    build:
+      context: ..
+      dockerfile: Dockerfile.client
+    restart: unless-stopped
+    networks:
+      - proxy
+
+volumes:
+  dashboard-data:
+
+networks:
+  # Existing edge/proxy network that already hosts Caddy, Authelia, and the socket proxy.
+  proxy:
+    external: true
+    name: proxy

@@ -1,0 +1,49 @@
+# Multi-stage API image: compile better-sqlite3 on Linux, ship without the toolchain.
+# Build: docker build -f Dockerfile.api -t dashboard-api .
+
+FROM node:22-bookworm AS build
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN corepack enable && corepack prepare pnpm@11.15.1 --activate
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
+COPY shared/package.json shared/tsconfig.json ./shared/
+COPY api/package.json api/tsconfig.json ./api/
+COPY client/package.json ./client/
+
+RUN pnpm install --frozen-lockfile --filter @dashboard/api...
+
+COPY shared ./shared
+COPY api ./api
+
+RUN pnpm --filter @dashboard/shared build \
+  && pnpm --filter @dashboard/api build \
+  && pnpm --filter @dashboard/api deploy --prod --legacy /out
+
+FROM node:22-bookworm-slim AS runtime
+
+RUN groupadd --gid 1000 dashboard \
+  && useradd --uid 1000 --gid dashboard --shell /usr/sbin/nologin --home-dir /app --no-create-home dashboard \
+  && mkdir -p /data /config \
+  && chown dashboard:dashboard /data
+
+WORKDIR /app
+
+COPY --from=build --chown=dashboard:dashboard /out ./
+
+USER dashboard
+
+ENV NODE_ENV=production \
+  CONFIG_PATH=/config/dashboard.yaml \
+  DATABASE_PATH=/data/dashboard.db \
+  PORT=3000 \
+  LOG_LEVEL=info
+
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"]

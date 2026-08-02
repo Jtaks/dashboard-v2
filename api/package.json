@@ -3,9 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
+    "start": "node dist/index.js",
     "test": "vitest run",
     "lint": "eslint ."
   },
