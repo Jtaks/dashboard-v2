@@ -55,27 +55,27 @@
   }
 
   .status-up {
-    color: #0f6b3a;
-    background: color-mix(in srgb, #0f6b3a 12%, transparent);
+    color: var(--status-up);
+    background: color-mix(in srgb, var(--status-up) var(--status-tint), transparent);
   }
 
   .status-starting {
-    color: #1a5f8a;
-    background: color-mix(in srgb, #1a5f8a 12%, transparent);
+    color: var(--status-starting);
+    background: color-mix(in srgb, var(--status-starting) var(--status-tint), transparent);
   }
 
   .status-degraded {
-    color: #8a5a00;
-    background: color-mix(in srgb, #8a5a00 12%, transparent);
+    color: var(--status-degraded);
+    background: color-mix(in srgb, var(--status-degraded) var(--status-tint), transparent);
   }
 
   .status-down {
-    color: #9b1c1c;
-    background: color-mix(in srgb, #9b1c1c 12%, transparent);
+    color: var(--status-down);
+    background: color-mix(in srgb, var(--status-down) var(--status-tint), transparent);
   }
 
   .status-unknown {
-    color: #4a5568;
-    background: color-mix(in srgb, #4a5568 12%, transparent);
+    color: var(--status-unknown);
+    background: color-mix(in srgb, var(--status-unknown) var(--status-tint), transparent);
   }
 </style>

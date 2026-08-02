@@ -1,0 +1,47 @@
+/**
+ * Shared visual tokens for status / severity and global a11y motion rules.
+ * Keep colour definitions here so badge, banner, and text surfaces stay aligned.
+ */
+
+html {
+  overflow-x: clip;
+}
+
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+:root {
+  /* Surfaces assumed for contrast audit (light Canvas). */
+  --surface-canvas: #ffffff;
+
+  /* Status foregrounds */
+  --status-up: #0f6b3a;
+  --status-starting: #1a5f8a;
+  --status-degraded: #8a5a00;
+  --status-down: #9b1c1c;
+  --status-unknown: #4a5568;
+
+  /* Severity foregrounds (aligned with matching status hues where they overlap) */
+  --severity-info: #1a5f8a;
+  --severity-success: #0f6b3a;
+  --severity-warning: #8a5a00;
+  --severity-error: #9b1c1c;
+
+  /* Tinted fills: percentage of the foreground mixed toward transparent over Canvas */
+  --status-tint: 12%;
+  --severity-tint: 12%;
+  --severity-warning-tint: 14%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

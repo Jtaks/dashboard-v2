@@ -72,7 +72,7 @@
     <p>{m.detail_not_found_body()}</p>
   </section>
 {:else}
-  <article data-testid="application-detail" data-app-id={application.id}>
+  <article class="detail-page" data-testid="application-detail" data-app-id={application.id}>
     <header class="detail-header">
       <h1 data-testid="application-name">{application.name}</h1>
       <p data-testid="application-description">{application.description}</p>
@@ -127,6 +127,14 @@
 {/if}
 
 <style>
+  .detail-page {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1rem;
+  }
+
   .detail-header {
     display: flex;
     flex-direction: column;

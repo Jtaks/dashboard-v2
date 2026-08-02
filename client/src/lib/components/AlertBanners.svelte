@@ -126,22 +126,26 @@
   }
 
   .severity-info {
-    color: #1a5f8a;
-    background: color-mix(in srgb, #1a5f8a 12%, transparent);
+    color: var(--severity-info);
+    background: color-mix(in srgb, var(--severity-info) var(--severity-tint), transparent);
   }
 
   .severity-success {
-    color: #0f6b3a;
-    background: color-mix(in srgb, #0f6b3a 12%, transparent);
+    color: var(--severity-success);
+    background: color-mix(in srgb, var(--severity-success) var(--severity-tint), transparent);
   }
 
   .severity-warning {
-    color: #8a5a00;
-    background: color-mix(in srgb, #8a5a00 14%, transparent);
+    color: var(--severity-warning);
+    background: color-mix(
+      in srgb,
+      var(--severity-warning) var(--severity-warning-tint),
+      transparent
+    );
   }
 
   .severity-error {
-    color: #9b1c1c;
-    background: color-mix(in srgb, #9b1c1c 12%, transparent);
+    color: var(--severity-error);
+    background: color-mix(in srgb, var(--severity-error) var(--severity-tint), transparent);
   }
 </style>

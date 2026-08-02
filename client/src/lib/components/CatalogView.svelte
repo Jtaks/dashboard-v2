@@ -101,6 +101,14 @@
 {/if}
 
 <style>
+  .catalog {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1rem;
+  }
+
   .catalog-header {
     display: flex;
     flex-wrap: wrap;

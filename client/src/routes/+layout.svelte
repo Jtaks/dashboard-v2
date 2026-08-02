@@ -1,6 +1,7 @@
 <script lang="ts">
   import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
   import AppShell from '$lib/components/AppShell.svelte';
+  import '$lib/styles/tokens.css';
   import type { Snippet } from 'svelte';
 
   let { children }: { children: Snippet } = $props();
