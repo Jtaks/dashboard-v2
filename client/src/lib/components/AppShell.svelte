@@ -8,6 +8,7 @@
   import { alertsQueryOptions } from '$lib/alerts/query.js';
   import AlertBanners from '$lib/components/AlertBanners.svelte';
   import Forbidden from '$lib/components/Forbidden.svelte';
+  import PushPermissionPrompt from '$lib/components/PushPermissionPrompt.svelte';
   import SignedOut from '$lib/components/SignedOut.svelte';
   import { m } from '$lib/paraglide/messages.js';
   import { statusQueryOptions } from '$lib/status/query.js';
@@ -85,6 +86,7 @@
     </nav>
   </header>
   <AlertBanners alerts={alerts} />
+  <PushPermissionPrompt />
   {@render children()}
 {:else}
   <SignedOut location={null} />
