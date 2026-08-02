@@ -85,7 +85,7 @@
       >
     </nav>
   </header>
-  <AlertBanners alerts={alerts} />
+  <AlertBanners {alerts} />
   <PushPermissionPrompt />
   {@render children()}
 {:else}

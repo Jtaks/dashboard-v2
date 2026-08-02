@@ -154,9 +154,7 @@ describe('admin alerts endpoints', () => {
     expect(badTopic.status).toBe(400);
     expect(await badTopic.json()).toEqual({ code: ErrorCodes.invalidBody });
 
-    const count = (
-      getDb().prepare(`SELECT COUNT(*) AS n FROM alerts`).get() as { n: number }
-    ).n;
+    const count = (getDb().prepare(`SELECT COUNT(*) AS n FROM alerts`).get() as { n: number }).n;
     expect(count).toBe(0);
   });
 
@@ -187,7 +185,9 @@ describe('admin alerts endpoints', () => {
     });
 
     const row = getDb()
-      .prepare(`SELECT title, body, topic, severity, created_by, created_at FROM alerts WHERE id = ?`)
+      .prepare(
+        `SELECT title, body, topic, severity, created_by, created_at FROM alerts WHERE id = ?`,
+      )
       .get(created.id) as {
       title: string;
       body: string;

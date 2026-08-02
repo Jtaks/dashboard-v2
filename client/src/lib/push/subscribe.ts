@@ -95,9 +95,7 @@ export async function subscribeToPush(
   }
 
   const permission =
-    Notification.permission === 'granted'
-      ? 'granted'
-      : await Notification.requestPermission();
+    Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
 
   if (permission !== 'granted') {
     throw new Error('push_permission_denied');
@@ -134,9 +132,7 @@ export async function deletePushSubscription(endpoint: string): Promise<void> {
  * then DELETE the server row. A failed DELETE still leaves the device
  * local-unsubscribed; orphaned rows are cleared by 404/410 handling on send.
  */
-export async function unsubscribeFromPush(
-  subscription?: PushSubscription | null,
-): Promise<void> {
+export async function unsubscribeFromPush(subscription?: PushSubscription | null): Promise<void> {
   const sub = subscription === undefined ? await getPushSubscription() : subscription;
   if (!sub) {
     return;

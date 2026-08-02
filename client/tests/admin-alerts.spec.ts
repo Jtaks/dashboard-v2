@@ -228,7 +228,9 @@ test('create, edit, and delete update the list without reload; delete needs conf
   await page.getByTestId('admin-alert-submit').click();
 
   await expect(list.getByTestId('admin-alert-row')).toHaveCount(2);
-  await expect(list.getByTestId('admin-alert-row-title').filter({ hasText: 'New outage' })).toBeVisible();
+  await expect(
+    list.getByTestId('admin-alert-row-title').filter({ hasText: 'New outage' }),
+  ).toBeVisible();
   await expect(page.getByTestId('admin-alert-form')).toHaveCount(0);
 
   const createdRow = () =>
@@ -238,8 +240,12 @@ test('create, edit, and delete update the list without reload; delete needs conf
   await page.getByTestId('admin-alert-title').fill('Renamed outage');
   await page.getByTestId('admin-alert-submit').click();
 
-  await expect(list.getByTestId('admin-alert-row-title').filter({ hasText: 'Renamed outage' })).toBeVisible();
-  await expect(list.getByTestId('admin-alert-row-title').filter({ hasText: 'New outage' })).toHaveCount(0);
+  await expect(
+    list.getByTestId('admin-alert-row-title').filter({ hasText: 'Renamed outage' }),
+  ).toBeVisible();
+  await expect(
+    list.getByTestId('admin-alert-row-title').filter({ hasText: 'New outage' }),
+  ).toHaveCount(0);
 
   const renamedRow = list
     .locator('[data-testid="admin-alert-row"]')
@@ -247,7 +253,9 @@ test('create, edit, and delete update the list without reload; delete needs conf
   await renamedRow.getByTestId('admin-alert-delete').click();
   await expect(page.getByTestId('admin-alert-delete-confirm')).toBeVisible();
   // Still present until confirm — list not mutated by the request alone.
-  await expect(list.getByTestId('admin-alert-row-title').filter({ hasText: 'Renamed outage' })).toBeVisible();
+  await expect(
+    list.getByTestId('admin-alert-row-title').filter({ hasText: 'Renamed outage' }),
+  ).toBeVisible();
 
   await page.getByTestId('admin-alert-delete-confirm-btn').click();
   await expect(list.getByTestId('admin-alert-row')).toHaveCount(1);

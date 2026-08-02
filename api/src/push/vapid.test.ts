@@ -147,9 +147,9 @@ describe('ensureVapidOrExit', () => {
       throw new Error('exit');
     }) as unknown as (code: number) => never;
 
-    expect(() =>
-      ensureVapidOrExit(fixture('vapid-valid.json'), {}, { error }, exit),
-    ).toThrow('exit');
+    expect(() => ensureVapidOrExit(fixture('vapid-valid.json'), {}, { error }, exit)).toThrow(
+      'exit',
+    );
 
     expect(exit).toHaveBeenCalledWith(1);
     expect(String(error.mock.calls[0]?.[0])).toMatch(/^vapid: VAPID_SUBJECT:/);

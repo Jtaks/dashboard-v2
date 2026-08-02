@@ -93,7 +93,9 @@ test('dismiss hides an alert, writes storage, and persists across reload', async
   await expect(page.getByTestId('alert-banner')).toHaveCount(0);
 
   await expect
-    .poll(async () => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.alertsDismissed))
+    .poll(async () =>
+      page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.alertsDismissed),
+    )
     .toBe(JSON.stringify(['alert-persist']));
 
   await page.reload();
@@ -122,7 +124,9 @@ test('keyboard alone can dismiss an alert', async ({ page }) => {
 
   await expect(page.getByTestId('alert-banner')).toHaveCount(0);
   await expect
-    .poll(async () => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.alertsDismissed))
+    .poll(async () =>
+      page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.alertsDismissed),
+    )
     .toBe(JSON.stringify(['alert-kbd']));
 });
 
@@ -165,7 +169,9 @@ test('each severity is visibly distinct and empty alerts occupy no space', async
   await expect(page.getByTestId('alert-banners')).toHaveCount(0);
 });
 
-test('republished alert under a new id appears after the old id was dismissed', async ({ page }) => {
+test('republished alert under a new id appears after the old id was dismissed', async ({
+  page,
+}) => {
   let alerts: Alert[] = [
     alertFixture({ id: 'alert-old', title: 'Same message', body: 'First publish.' }),
   ];

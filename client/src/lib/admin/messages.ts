@@ -2,7 +2,12 @@ import type { Severity } from '@dashboard/shared';
 import { m } from '$lib/paraglide/messages.js';
 
 /** Severity members matching the shared Severity union — never a free-form string. */
-export const SEVERITIES = ['info', 'success', 'warning', 'error'] as const satisfies readonly Severity[];
+export const SEVERITIES = [
+  'info',
+  'success',
+  'warning',
+  'error',
+] as const satisfies readonly Severity[];
 
 /** Accessible / visible name for a severity value from the Paraglide catalog. */
 export function severityLabel(severity: Severity): string {

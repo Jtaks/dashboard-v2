@@ -1,9 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import {
-  PUSH_FALLBACK_BODY,
-  PUSH_FALLBACK_TITLE,
-  PUSH_NOTIFICATION_ICON,
-} from './fallback.js';
+import { PUSH_FALLBACK_BODY, PUSH_FALLBACK_TITLE, PUSH_NOTIFICATION_ICON } from './fallback.js';
 import {
   handleNotificationClick,
   handlePush,

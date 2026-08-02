@@ -233,9 +233,8 @@ describe('POST /api/admin/push', () => {
     expect(allOutput).not.toContain('Secret body');
     expect(allOutput).not.toContain('/secret-url');
 
-    const alertCount = (
-      getDb().prepare(`SELECT COUNT(*) AS n FROM alerts`).get() as { n: number }
-    ).n;
+    const alertCount = (getDb().prepare(`SELECT COUNT(*) AS n FROM alerts`).get() as { n: number })
+      .n;
     expect(alertCount).toBe(0);
 
     // No send-history table: only push_subscriptions rows remain.

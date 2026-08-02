@@ -8,9 +8,7 @@ import {
   type SettingsPushStatusInput,
 } from './settings-status.js';
 
-function statusInput(
-  overrides: Partial<SettingsPushStatusInput> = {},
-): SettingsPushStatusInput {
+function statusInput(overrides: Partial<SettingsPushStatusInput> = {}): SettingsPushStatusInput {
   return {
     hasSubscription: false,
     permission: 'default',
@@ -20,12 +18,12 @@ function statusInput(
 
 describe('deriveSettingsPushStatus', () => {
   it('returns subscribed when a subscription is present and permission is not denied', () => {
-    expect(deriveSettingsPushStatus(statusInput({ hasSubscription: true, permission: 'granted' }))).toBe(
-      'subscribed',
-    );
-    expect(deriveSettingsPushStatus(statusInput({ hasSubscription: true, permission: 'default' }))).toBe(
-      'subscribed',
-    );
+    expect(
+      deriveSettingsPushStatus(statusInput({ hasSubscription: true, permission: 'granted' })),
+    ).toBe('subscribed');
+    expect(
+      deriveSettingsPushStatus(statusInput({ hasSubscription: true, permission: 'default' })),
+    ).toBe('subscribed');
     expect(
       deriveSettingsPushStatus(statusInput({ hasSubscription: true, permission: 'unsupported' })),
     ).toBe('subscribed');

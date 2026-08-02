@@ -409,7 +409,7 @@ test('status follows a browser revoke after refresh, not localStorage', async ({
     'data-push-status',
     'not_subscribed',
   );
-  expect(
-    await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.pushPrompt),
-  ).toBe('dismissed');
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.pushPrompt)).toBe(
+    'dismissed',
+  );
 });

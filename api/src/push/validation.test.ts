@@ -5,7 +5,8 @@ import { deletePushSubscriptionBodySchema, pushSubscriptionBodySchema } from './
 const validSubscription = {
   endpoint: 'https://push.example/device-1',
   keys: {
-    p256dh: 'BBvAqccKn9JVUDVBF0i4Xwvx0Rm39fzxQIgTZSl6-ItXsv4zaHoYOPKHeSd4mKBeojpKDB2Kgamft7UYb5SSoBs',
+    p256dh:
+      'BBvAqccKn9JVUDVBF0i4Xwvx0Rm39fzxQIgTZSl6-ItXsv4zaHoYOPKHeSd4mKBeojpKDB2Kgamft7UYb5SSoBs',
     auth: 'auth-secret-value',
   },
 };

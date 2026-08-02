@@ -1,18 +1,11 @@
 import type { PushSend } from '@dashboard/shared';
-import {
-  PUSH_FALLBACK_BODY,
-  PUSH_FALLBACK_TITLE,
-  PUSH_NOTIFICATION_ICON,
-} from './fallback.js';
+import { PUSH_FALLBACK_BODY, PUSH_FALLBACK_TITLE, PUSH_NOTIFICATION_ICON } from './fallback.js';
 import { parsePushSend } from './parse.js';
 
 /** Minimal SW surface the handlers need — injectable for Vitest. */
 export type PushWorkerScope = {
   registration: {
-    showNotification(
-      title: string,
-      options?: NotificationOptions,
-    ): Promise<void>;
+    showNotification(title: string, options?: NotificationOptions): Promise<void>;
   };
   clients: {
     matchAll(options?: ClientQueryOptions): Promise<ReadonlyArray<WindowClientLike>>;
@@ -115,7 +108,5 @@ export function registerPushHandlers(
   },
 ): void {
   scope.addEventListener('push', (event) => handlePush(scope, event));
-  scope.addEventListener('notificationclick', (event) =>
-    handleNotificationClick(scope, event),
-  );
+  scope.addEventListener('notificationclick', (event) => handleNotificationClick(scope, event));
 }

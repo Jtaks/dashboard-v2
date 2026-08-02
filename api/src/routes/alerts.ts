@@ -9,9 +9,7 @@ import type { AppVariables } from '../types.js';
 export function alertsHandler(): (c: Context<{ Variables: AppVariables }>) => Response {
   return (c) => {
     const identity = c.get('identity');
-    const alerts: Alert[] = filterAlertsForUser(listAlerts(getDb()), identity.groups).map(
-      toAlert,
-    );
+    const alerts: Alert[] = filterAlertsForUser(listAlerts(getDb()), identity.groups).map(toAlert);
     return c.json(alerts);
   };
 }

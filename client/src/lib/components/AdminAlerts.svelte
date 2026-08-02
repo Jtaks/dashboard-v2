@@ -173,9 +173,7 @@
 
   const showForbidden = $derived(forbidden ?? mutationForbidden ?? pushForbidden);
   const busy = $derived(
-    createAlertMutation.isPending ||
-      patchAlertMutation.isPending ||
-      deleteAlertMutation.isPending,
+    createAlertMutation.isPending || patchAlertMutation.isPending || deleteAlertMutation.isPending,
   );
 </script>
 
@@ -299,11 +297,7 @@
             {/if}
 
             <div class="form-actions">
-              <button
-                type="submit"
-                data-testid="admin-alert-submit"
-                disabled={busy}
-              >
+              <button type="submit" data-testid="admin-alert-submit" disabled={busy}>
                 {editor.kind === 'create' ? m.admin_alert_create() : m.admin_alert_save()}
               </button>
               <button
@@ -351,7 +345,11 @@
         {#if alerts.length === 0}
           <p data-testid="admin-alerts-empty">{m.admin_alerts_empty()}</p>
         {:else}
-          <ul class="alert-list" data-testid="admin-alerts-list" aria-label={m.admin_alerts_list_label()}>
+          <ul
+            class="alert-list"
+            data-testid="admin-alerts-list"
+            aria-label={m.admin_alerts_list_label()}
+          >
             {#each alerts as alert (alert.id)}
               <li class="alert-row" data-testid="admin-alert-row" data-alert-id={alert.id}>
                 <div class="alert-row-main">
@@ -359,7 +357,9 @@
                   <dl class="alert-meta">
                     <div>
                       <dt>{m.admin_alert_severity()}</dt>
-                      <dd data-testid="admin-alert-row-severity">{severityLabel(alert.severity)}</dd>
+                      <dd data-testid="admin-alert-row-severity">
+                        {severityLabel(alert.severity)}
+                      </dd>
                     </div>
                     <div>
                       <dt>{m.admin_alert_topic()}</dt>

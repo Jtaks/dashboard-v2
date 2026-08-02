@@ -187,11 +187,7 @@ describe('GET /api/alerts', () => {
     });
     expect(docsRes.status).toBe(200);
     const docsAlerts = (await docsRes.json()) as Alert[];
-    expect(docsAlerts.map((a) => a.id)).toEqual([
-      openWildcard.id,
-      futureWildcard.id,
-      docsOnly.id,
-    ]);
+    expect(docsAlerts.map((a) => a.id)).toEqual([openWildcard.id, futureWildcard.id, docsOnly.id]);
     expect(docsAlerts.find((a) => a.id === mediaOnly.id)).toBeUndefined();
   });
 

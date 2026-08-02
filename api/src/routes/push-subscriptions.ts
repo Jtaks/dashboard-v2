@@ -2,11 +2,7 @@ import type { Context } from 'hono';
 
 import { getDb } from '../db/index.js';
 import { ErrorCodes, jsonError } from '../errors.js';
-import {
-  deleteSubscription,
-  rewriteTopics,
-  upsertSubscription,
-} from '../push/repository.js';
+import { deleteSubscription, rewriteTopics, upsertSubscription } from '../push/repository.js';
 import {
   deletePushSubscriptionBodySchema,
   pushSubscriptionBodySchema,

@@ -296,9 +296,8 @@ describe('POST/DELETE /api/push/subscriptions', () => {
   }
 
   function subscriptionCount(): number {
-    return (
-      getDb().prepare(`SELECT COUNT(*) AS n FROM push_subscriptions`).get() as { n: number }
-    ).n;
+    return (getDb().prepare(`SELECT COUNT(*) AS n FROM push_subscriptions`).get() as { n: number })
+      .n;
   }
 
   it('upserts twice with one row, same created_at, later last_seen_at', async () => {

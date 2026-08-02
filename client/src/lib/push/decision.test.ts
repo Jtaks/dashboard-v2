@@ -45,9 +45,9 @@ describe('decidePushLoadAction', () => {
 
   it('returns none when permission is denied', () => {
     expect(decidePushLoadAction(input({ permission: 'denied' }))).toBe('none');
-    expect(
-      decidePushLoadAction(input({ permission: 'denied', promptDismissed: false })),
-    ).toBe('none');
+    expect(decidePushLoadAction(input({ permission: 'denied', promptDismissed: false }))).toBe(
+      'none',
+    );
   });
 
   it('returns none when permission is granted but there is no subscription', () => {

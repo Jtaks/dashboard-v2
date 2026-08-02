@@ -32,10 +32,7 @@ export type AudienceFixture = {
  * De-duplicates endpoints that carry more than one matching topic.
  * A topic no subscription carries yields an empty list.
  */
-export function expandAudience(
-  subscriptions: readonly AudienceFixture[],
-  topic: string,
-): string[] {
+export function expandAudience(subscriptions: readonly AudienceFixture[], topic: string): string[] {
   if (topic === '*') {
     const seen = new Set<string>();
     const out: string[] = [];

@@ -35,21 +35,13 @@ describe('isAlertVisible', () => {
 
   it('excludes an endsAt a moment before the reference time', () => {
     expect(
-      isAlertVisible(
-        record({ endsAt: '2024-06-15T11:59:59.999Z' }),
-        ['media-users'],
-        now,
-      ),
+      isAlertVisible(record({ endsAt: '2024-06-15T11:59:59.999Z' }), ['media-users'], now),
     ).toBe(false);
   });
 
   it('includes an endsAt a moment after the reference time', () => {
     expect(
-      isAlertVisible(
-        record({ endsAt: '2024-06-15T12:00:00.001Z' }),
-        ['media-users'],
-        now,
-      ),
+      isAlertVisible(record({ endsAt: '2024-06-15T12:00:00.001Z' }), ['media-users'], now),
     ).toBe(true);
   });
 
@@ -58,9 +50,7 @@ describe('isAlertVisible', () => {
   });
 
   it('does not grant visibility from adminGroup alone', () => {
-    expect(
-      isAlertVisible(record({ topic: 'media-users' }), ['system-admins'], now),
-    ).toBe(false);
+    expect(isAlertVisible(record({ topic: 'media-users' }), ['system-admins'], now)).toBe(false);
   });
 });
 
@@ -78,9 +68,6 @@ describe('filterAlertsForUser', () => {
       }),
     ];
 
-    expect(filterAlertsForUser(alerts, ['media-users'], now).map((a) => a.id)).toEqual([
-      '1',
-      '2',
-    ]);
+    expect(filterAlertsForUser(alerts, ['media-users'], now).map((a) => a.id)).toEqual(['1', '2']);
   });
 });

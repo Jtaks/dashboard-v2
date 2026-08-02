@@ -79,8 +79,7 @@ export type IosPwaNoticeInput = {
  */
 export function isIosSafari(userAgent: string, maxTouchPoints = 0): boolean {
   const isAppleMobile =
-    /iPad|iPhone|iPod/i.test(userAgent) ||
-    (/Macintosh/i.test(userAgent) && maxTouchPoints > 1);
+    /iPad|iPhone|iPod/i.test(userAgent) || (/Macintosh/i.test(userAgent) && maxTouchPoints > 1);
 
   if (!isAppleMobile) {
     return false;

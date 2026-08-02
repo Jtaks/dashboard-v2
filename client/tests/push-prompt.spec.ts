@@ -232,7 +232,7 @@ test('decline stores dismissed and does not return after reload', async ({ page 
   await page.reload();
   await expect(page.getByTestId('catalog-list')).toBeVisible();
   await expect(page.getByTestId('push-prompt')).toHaveCount(0);
-  expect(
-    await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.pushPrompt),
-  ).toBe('dismissed');
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.pushPrompt)).toBe(
+    'dismissed',
+  );
 });

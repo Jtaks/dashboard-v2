@@ -64,9 +64,9 @@ describe('pushSendBodySchema', () => {
   it('rejects missing title or body and unknown topics', () => {
     expect(schema.safeParse({ title: '', body: 'x', url: null, topic: '*' }).success).toBe(false);
     expect(schema.safeParse({ title: 'x', body: '', url: null, topic: '*' }).success).toBe(false);
-    expect(
-      schema.safeParse({ title: 'x', body: 'y', url: null, topic: 'ghost' }).success,
-    ).toBe(false);
+    expect(schema.safeParse({ title: 'x', body: 'y', url: null, topic: 'ghost' }).success).toBe(
+      false,
+    );
     expect(schema.safeParse({ title: 'x', body: 'y', topic: '*' }).success).toBe(false);
   });
 });
