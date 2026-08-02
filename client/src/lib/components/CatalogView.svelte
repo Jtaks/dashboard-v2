@@ -2,9 +2,11 @@
   import { createQuery } from '@tanstack/svelte-query';
   import { ForbiddenError, UnauthorizedError } from '$lib/api/client.js';
   import { catalogQueryOptions } from '$lib/catalog/query.js';
+  import { filterApplicationsByQuery } from '$lib/catalog/search.js';
   import { readCatalogView, writeCatalogView, type CatalogViewMode } from '$lib/catalog/view.js';
   import ApplicationRow from '$lib/components/ApplicationRow.svelte';
   import ApplicationTile from '$lib/components/ApplicationTile.svelte';
+  import CatalogSearch from '$lib/components/CatalogSearch.svelte';
   import Forbidden from '$lib/components/Forbidden.svelte';
   import SignedOut from '$lib/components/SignedOut.svelte';
   import ViewControl from '$lib/components/ViewControl.svelte';
@@ -14,6 +16,9 @@
 
   // ssr is off; read once so the first paint matches localStorage.
   let view = $state<CatalogViewMode>(readCatalogView());
+
+  // B4: search query is in-memory only — not persisted (TDD client state).
+  let searchQuery = $state('');
 
   function setView(next: CatalogViewMode) {
     view = next;
@@ -27,6 +32,9 @@
     catalogQuery.error instanceof ForbiddenError ? catalogQuery.error : null,
   );
   const applications = $derived(catalogQuery.data?.applications ?? []);
+  // B4: shared filter so list and grid render the same narrowed catalog.
+  const filteredApplications = $derived(filterApplicationsByQuery(applications, searchQuery));
+  const searchActive = $derived(searchQuery.trim().length > 0);
 </script>
 
 {#if unauthorized}
@@ -38,7 +46,8 @@
     <header class="catalog-header" data-testid="catalog-header">
       <h1 id="catalog-title">{m.nav_list()}</h1>
       <div class="catalog-header-tools">
-        <!-- B4: search field lands in this tools row beside the view control. -->
+        <!-- B4: search field — filter applies upstream of list/grid below. -->
+        <CatalogSearch bind:value={searchQuery} />
         <ViewControl {view} onchange={setView} />
       </div>
     </header>
@@ -58,15 +67,28 @@
         <h2 id="catalog-empty-title">{m.catalog_empty_title()}</h2>
         <p>{m.catalog_empty_body()}</p>
       </section>
+    {:else if filteredApplications.length === 0 && searchActive}
+      <!-- B4: no-results is distinct from empty entitlement above. -->
+      <section data-testid="catalog-no-results" aria-labelledby="catalog-no-results-title">
+        <h2 id="catalog-no-results-title">{m.catalog_search_no_results_title()}</h2>
+        <p>{m.catalog_search_no_results_body()}</p>
+        <button
+          type="button"
+          data-testid="catalog-no-results-clear"
+          onclick={() => (searchQuery = '')}
+        >
+          {m.catalog_search_clear()}
+        </button>
+      </section>
     {:else if view === 'list'}
       <ul data-testid="catalog-list">
-        {#each applications as application (application.id)}
+        {#each filteredApplications as application (application.id)}
           <ApplicationRow {application} />
         {/each}
       </ul>
     {:else}
       <div data-testid="catalog-grid" class="catalog-grid">
-        {#each applications as application (application.id)}
+        {#each filteredApplications as application (application.id)}
           <ApplicationTile {application} />
         {/each}
       </div>
