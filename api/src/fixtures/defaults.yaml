@@ -1,0 +1,13 @@
+groups:
+  - media-users
+applications:
+  - id: media
+    name: Media
+    description: Films and series.
+    url: https://media.example.com
+    icon: media.svg
+    groups: [media-users]
+    services:
+      - id: jellyfin
+        name: Jellyfin
+        containers: [jellyfin]

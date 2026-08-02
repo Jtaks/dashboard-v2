@@ -1,0 +1,17 @@
+adminGroup: system-admins
+groups:
+  - media-users
+futureFlag: experimental
+applications:
+  - id: media
+    name: Media
+    description: Films and series.
+    url: https://media.example.com
+    icon: media.svg
+    groups: [media-users]
+    extraAppKey: ignored
+    services:
+      - id: jellyfin
+        name: Jellyfin
+        containers: [jellyfin]
+        mystery: true
