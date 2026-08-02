@@ -1,7 +1,7 @@
 <script lang="ts">
-  import CatalogList from '$lib/components/CatalogList.svelte';
+  import CatalogView from '$lib/components/CatalogView.svelte';
 </script>
 
 <main>
-  <CatalogList />
+  <CatalogView />
 </main>
