@@ -128,3 +128,26 @@ export async function deletePushSubscription(endpoint: string): Promise<void> {
     body: JSON.stringify({ endpoint }),
   });
 }
+
+/**
+ * Unsubscribe this device: capture the endpoint, drop the browser subscription,
+ * then DELETE the server row. A failed DELETE still leaves the device
+ * local-unsubscribed; orphaned rows are cleared by 404/410 handling on send.
+ */
+export async function unsubscribeFromPush(
+  subscription?: PushSubscription | null,
+): Promise<void> {
+  const sub = subscription === undefined ? await getPushSubscription() : subscription;
+  if (!sub) {
+    return;
+  }
+
+  const endpoint = sub.endpoint;
+  await sub.unsubscribe();
+
+  try {
+    await deletePushSubscription(endpoint);
+  } catch {
+    // Local unsubscribe already succeeded; server cleanup is best-effort.
+  }
+}

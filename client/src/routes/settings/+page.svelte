@@ -4,6 +4,7 @@
   import { fetchSession, sessionQueryKey } from '$lib/auth/session.js';
   import SettingsAdminSection from '$lib/components/SettingsAdminSection.svelte';
   import SettingsFlagsSection from '$lib/components/SettingsFlagsSection.svelte';
+  import SettingsNotificationsSection from '$lib/components/SettingsNotificationsSection.svelte';
   import SettingsSection from '$lib/components/SettingsSection.svelte';
   import { m } from '$lib/paraglide/messages.js';
   import { shouldShowAdminSection } from '$lib/settings/admin.js';
@@ -23,8 +24,9 @@
   <h1>{m.settings_title()}</h1>
 
   <div class="settings-sections">
-    <!-- F5 mounts notification subscription controls into this section. -->
-    <SettingsSection id="notifications" heading={m.settings_section_notifications()} />
+    <SettingsSection id="notifications" heading={m.settings_section_notifications()}>
+      <SettingsNotificationsSection />
+    </SettingsSection>
 
     <SettingsSection id="flags" heading={m.settings_section_flags()}>
       <SettingsFlagsSection {session} />
