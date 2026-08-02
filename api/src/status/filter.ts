@@ -1,7 +1,4 @@
-import {
-  aggregateStatuses,
-  type StatusReport,
-} from '@dashboard/shared';
+import { aggregateStatuses, type StatusReport } from '@dashboard/shared';
 
 import { filterCatalog } from '../catalog.js';
 import type { ResolvedConfig } from '../config.js';
@@ -21,10 +18,7 @@ export function filterStatusReport(
 ): StatusReport {
   const catalog = filterCatalog(config, groups);
   const entitled = new Map(
-    catalog.applications.map((app) => [
-      app.id,
-      new Set(app.services.map((service) => service.id)),
-    ]),
+    catalog.applications.map((app) => [app.id, new Set(app.services.map((service) => service.id))]),
   );
 
   const applications = report.applications

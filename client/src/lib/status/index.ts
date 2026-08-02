@@ -1,11 +1,7 @@
 /** C4/C5 status presentation helpers. StatusBadge lives at `$lib/components/StatusBadge.svelte`. */
 export { countServicesByStatus, emptyStatusCounts, statusCountEntries } from './counts.js';
 export type { StatusCounts } from './counts.js';
-export {
-  durationLabel,
-  elapsedDuration,
-  formatSinceDuration,
-} from './duration.js';
+export { durationLabel, elapsedDuration, formatSinceDuration } from './duration.js';
 export type { DurationParts, DurationUnit } from './duration.js';
 export { statusAccessibleName, statusKeyLabel, statusNullLabel } from './labels.js';
 export { getApplicationStatus, getServiceStatus } from './accessors.js';

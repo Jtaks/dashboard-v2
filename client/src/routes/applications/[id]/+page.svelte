@@ -25,9 +25,7 @@
   const nowMs = $derived(statusQuery.dataUpdatedAt);
 
   const applicationUptime = $derived(
-    applicationStatus && nowMs
-      ? formatSinceDuration(applicationStatus.since, nowMs)
-      : null,
+    applicationStatus && nowMs ? formatSinceDuration(applicationStatus.since, nowMs) : null,
   );
 
   const serviceRows = $derived(
@@ -92,10 +90,7 @@
       </div>
     </header>
 
-    <section
-      data-testid="application-status-detail"
-      aria-label={m.detail_status_label()}
-    >
+    <section data-testid="application-status-detail" aria-label={m.detail_status_label()}>
       {#if serviceRows.length > 0}
         <h2 class="services-heading" id="detail-services-heading">{m.detail_services_label()}</h2>
         <ul

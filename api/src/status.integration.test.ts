@@ -82,7 +82,9 @@ describe('GET /api/status', () => {
     };
   }
 
-  async function startProxy(items: ListItem[]): Promise<{ baseUrl: string; listCalls: () => number }> {
+  async function startProxy(
+    items: ListItem[],
+  ): Promise<{ baseUrl: string; listCalls: () => number }> {
     let listCalls = 0;
     const { server, baseUrl } = await listen((req, res) => {
       if (req.method === 'GET' && req.url?.startsWith('/containers/json')) {

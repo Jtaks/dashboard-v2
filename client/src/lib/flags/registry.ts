@@ -26,9 +26,6 @@ export const FEATURE_FLAGS: readonly FeatureFlag[] = [
 ];
 
 /** Flags visible on the settings page for the given session admin bit. */
-export function visibleFlags(
-  flags: readonly FeatureFlag[],
-  isAdmin: boolean,
-): FeatureFlag[] {
+export function visibleFlags(flags: readonly FeatureFlag[], isAdmin: boolean): FeatureFlag[] {
   return flags.filter((flag) => !flag.admin || isAdmin);
 }

@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { mapContainerStatus, normalizeStartedAt } from '../docker/map-status.js';
 import type { ContainerSnapshot } from '../docker/types.js';
 
-function snap(partial: Partial<ContainerSnapshot> & Pick<ContainerSnapshot, 'state'>): ContainerSnapshot {
+function snap(
+  partial: Partial<ContainerSnapshot> & Pick<ContainerSnapshot, 'state'>,
+): ContainerSnapshot {
   return {
     name: partial.name ?? 'ctr',
     state: partial.state,

@@ -1,11 +1,6 @@
 <script lang="ts">
   import type { Session } from '@dashboard/shared';
-  import {
-    FEATURE_FLAGS,
-    featureFlags,
-    setFeatureFlag,
-    visibleFlags,
-  } from '$lib/flags/index.js';
+  import { FEATURE_FLAGS, featureFlags, setFeatureFlag, visibleFlags } from '$lib/flags/index.js';
   import { resolveFlagDescription } from '$lib/flags/messages.js';
   import { m } from '$lib/paraglide/messages.js';
 

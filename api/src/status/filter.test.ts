@@ -89,10 +89,7 @@ describe('filterStatusReport', () => {
     const filtered = filterStatusReport(fullReport, config, ['media-users']);
 
     expect(filtered.applications.map((a) => a.id)).toEqual(['media']);
-    expect(filtered.applications[0]?.services.map((s) => s.id)).toEqual([
-      'jellyfin',
-      'docs-link',
-    ]);
+    expect(filtered.applications[0]?.services.map((s) => s.id)).toEqual(['jellyfin', 'docs-link']);
   });
 
   it('excludes an invisible service from the application aggregate', () => {

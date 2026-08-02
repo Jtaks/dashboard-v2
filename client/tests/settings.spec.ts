@@ -140,9 +140,7 @@ test('feature flag keyboard toggle updates subscribers, storage, and survives re
   await expect(probe).toHaveAttribute('data-enabled', 'true');
 
   await expect
-    .poll(async () =>
-      page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.flags),
-    )
+    .poll(async () => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.flags))
     .toBe(JSON.stringify({ 'status-summary-popover': true }));
 
   // Re-stub before reload so the session route stays fulfilled.
@@ -150,9 +148,10 @@ test('feature flag keyboard toggle updates subscribers, storage, and survives re
   await page.reload();
 
   await expect(page.getByTestId('settings-page')).toBeVisible();
-  await expect(
-    page.getByTestId('settings-flag-toggle-status-summary-popover'),
-  ).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByTestId('settings-flag-toggle-status-summary-popover')).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
   await expect(page.getByTestId('flag-status-summary-popover-state')).toHaveAttribute(
     'data-enabled',
     'true',

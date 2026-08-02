@@ -1,17 +1,8 @@
 import type { FeatureFlag } from '@dashboard/shared';
 import { STORAGE_KEYS } from '@dashboard/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  FEATURE_FLAGS,
-  STATUS_SUMMARY_POPOVER,
-  visibleFlags,
-} from './registry.js';
-import {
-  featureFlags,
-  isFeatureEnabled,
-  reloadFeatureFlags,
-  setFeatureFlag,
-} from './store.js';
+import { FEATURE_FLAGS, STATUS_SUMMARY_POPOVER, visibleFlags } from './registry.js';
+import { featureFlags, isFeatureEnabled, reloadFeatureFlags, setFeatureFlag } from './store.js';
 import { readFlagRecord, writeFlagRecord } from './storage.js';
 
 type StorageMap = Map<string, string>;
@@ -71,10 +62,7 @@ describe('visibleFlags', () => {
   });
 
   it('lists all flags for an admin session', () => {
-    expect(visibleFlags(fixture, true).map((f) => f.feature)).toEqual([
-      'user-flag',
-      'admin-flag',
-    ]);
+    expect(visibleFlags(fixture, true).map((f) => f.feature)).toEqual(['user-flag', 'admin-flag']);
   });
 
   it('filters the real registry by session admin', () => {
@@ -102,9 +90,7 @@ describe('readFlagRecord / writeFlagRecord', () => {
 
   it('writes and reads through STORAGE_KEYS.flags', () => {
     writeFlagRecord({ [STATUS_SUMMARY_POPOVER]: true });
-    expect(map.get(STORAGE_KEYS.flags)).toBe(
-      JSON.stringify({ [STATUS_SUMMARY_POPOVER]: true }),
-    );
+    expect(map.get(STORAGE_KEYS.flags)).toBe(JSON.stringify({ [STATUS_SUMMARY_POPOVER]: true }));
     expect(readFlagRecord()).toEqual({ [STATUS_SUMMARY_POPOVER]: true });
   });
 
@@ -128,10 +114,7 @@ describe('readFlagRecord / writeFlagRecord', () => {
   });
 
   it('keeps only boolean entries from a mixed object', () => {
-    map.set(
-      STORAGE_KEYS.flags,
-      JSON.stringify({ ok: true, bad: 'yes', also: 1, off: false }),
-    );
+    map.set(STORAGE_KEYS.flags, JSON.stringify({ ok: true, bad: 'yes', also: 1, off: false }));
     expect(readFlagRecord()).toEqual({ ok: true, off: false });
   });
 });

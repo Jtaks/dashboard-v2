@@ -1,7 +1,4 @@
-import {
-  extractHealth,
-  normalizeStartedAt,
-} from './map-status.js';
+import { extractHealth, normalizeStartedAt } from './map-status.js';
 import type { ContainerSnapshot, DockerListItem } from './types.js';
 
 export class DockerProxyError extends Error {

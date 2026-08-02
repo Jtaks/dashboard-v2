@@ -145,9 +145,7 @@ export async function collectStatus(
 
   const client =
     options.docker ??
-    (options.dockerProxyUrl
-      ? createDockerClient({ baseUrl: options.dockerProxyUrl })
-      : null);
+    (options.dockerProxyUrl ? createDockerClient({ baseUrl: options.dockerProxyUrl }) : null);
 
   if (client === null) {
     unreachable = true;
