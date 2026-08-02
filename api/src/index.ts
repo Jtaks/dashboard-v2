@@ -24,6 +24,23 @@ export { createLogger, type Logger } from './logging.js';
 export { isAdmin, type Identity } from './identity.js';
 export { ErrorCodes, type ApiErrorBody } from './errors.js';
 export {
+  deleteAlert,
+  getAlertById,
+  insertAlert,
+  listAlerts,
+  toAlert,
+  updateAlert,
+  SEVERITIES,
+  createAlertBodySchema,
+  patchAlertBodySchema,
+  type AlertRecord,
+  type InsertAlertInput,
+  type UpdateAlertInput,
+  type AlertSeverity,
+  type CreateAlertBody,
+  type PatchAlertBody,
+} from './alerts/index.js';
+export {
   collectStatus,
   createStatusCache,
   filterStatusReport,

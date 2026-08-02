@@ -9,6 +9,12 @@ import { adminGuard } from './middleware/admin.js';
 import { identityMiddleware } from './middleware/identity.js';
 import { requestLoggingMiddleware } from './middleware/logging.js';
 import { originMiddleware } from './middleware/origin.js';
+import {
+  adminCreateAlertHandler,
+  adminDeleteAlertHandler,
+  adminListAlertsHandler,
+  adminPatchAlertHandler,
+} from './routes/admin-alerts.js';
 import { adminTopicsHandler } from './routes/admin-topics.js';
 import { catalogHandler } from './routes/catalog.js';
 import { sessionHandler } from './routes/session.js';
@@ -78,6 +84,10 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));
   admin.get('/topics', adminTopicsHandler(config.groups));
+  admin.get('/alerts', adminListAlertsHandler());
+  admin.post('/alerts', adminCreateAlertHandler(config.groups));
+  admin.patch('/alerts/:id', adminPatchAlertHandler(config.groups));
+  admin.delete('/alerts/:id', adminDeleteAlertHandler());
   api.route('/admin', admin);
 
   options.registerApi?.(api);

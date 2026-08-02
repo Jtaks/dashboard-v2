@@ -10,6 +10,7 @@ export const ErrorCodes = {
   unauthorized: 'unauthorized',
   forbidden: 'forbidden',
   invalidOrigin: 'invalid_origin',
+  invalidBody: 'invalid_body',
   notFound: 'not_found',
   internalError: 'internal_error',
 } as const;
