@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-hidden="true">
+  <!-- Geometric media mark: rounded frame + play triangle. 64x64 with padding for row/tile sizes. -->
+  <rect x="10" y="14" width="44" height="36" rx="6" stroke="#334155" stroke-width="3"/>
+  <path d="M28 24v16l14-8-14-8z" fill="#334155"/>
+</svg>

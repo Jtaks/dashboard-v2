@@ -17,6 +17,7 @@
   "dependencies": {
     "@dashboard/shared": "workspace:*",
     "@inlang/paraglide-js": "^2.23.0",
+    "@lucide/svelte": "^1.28.0",
     "@tanstack/svelte-query": "^6.1.38"
   },
   "devDependencies": {
@@ -29,6 +30,7 @@
     "svelte-eslint-parser": "^1.8.0",
     "typescript": "^5.9.2",
     "vite": "^7.0.6",
-    "vitest": "^3.2.7"
+    "vitest": "^3.2.7",
+    "yaml": "^2.9.0"
   }
 }
