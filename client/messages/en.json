@@ -50,5 +50,46 @@
   "status_summary_label": "Dependency status",
   "status_summary_expand": "Show dependency status",
   "status_summary_collapse": "Hide dependency status",
-  "status_summary_count": "{count} {label}"
+  "status_summary_count": "{count} {label}",
+  "detail_services_label": "Services",
+  "duration_seconds": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "for {count} second",
+        "countPlural=other": "for {count} seconds"
+      }
+    }
+  ],
+  "duration_minutes": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "for {count} minute",
+        "countPlural=other": "for {count} minutes"
+      }
+    }
+  ],
+  "duration_hours": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "for {count} hour",
+        "countPlural=other": "for {count} hours"
+      }
+    }
+  ],
+  "duration_days": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "for {count} day",
+        "countPlural=other": "for {count} days"
+      }
+    }
+  ]
 }

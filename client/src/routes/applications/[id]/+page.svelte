@@ -6,12 +6,45 @@
   import { catalogQueryOptions } from '$lib/catalog/query.js';
   import Forbidden from '$lib/components/Forbidden.svelte';
   import SignedOut from '$lib/components/SignedOut.svelte';
+  import StatusBadge from '$lib/components/StatusBadge.svelte';
   import { m } from '$lib/paraglide/messages.js';
+  import { getApplicationStatus, getServiceStatus } from '$lib/status/accessors.js';
+  import { formatSinceDuration } from '$lib/status/duration.js';
+  import { readStatusQueryState, statusQueryOptions } from '$lib/status/query.js';
 
   const catalogQuery = createQuery(() => catalogQueryOptions());
+  // C3 shared status poll — same key as the shell/catalog; never fetched ad hoc here.
+  const statusQuery = createQuery(() => statusQueryOptions());
 
   const applicationId = $derived(page.params.id ?? '');
   const application = $derived(findApplicationById(catalogQuery.data, applicationId));
+
+  const statusState = $derived(readStatusQueryState(statusQuery));
+  const applicationStatus = $derived(getApplicationStatus(statusState.report, applicationId));
+  // Recompute durations when each poll lands (dataUpdatedAt), not once at first paint.
+  const nowMs = $derived(statusQuery.dataUpdatedAt);
+
+  const applicationUptime = $derived(
+    applicationStatus && nowMs
+      ? formatSinceDuration(applicationStatus.since, nowMs)
+      : null,
+  );
+
+  const serviceRows = $derived(
+    (application?.services ?? []).map((service) => {
+      const reading = getServiceStatus(statusState.report, applicationId, service.id);
+      const showStatus = service.hasContainers;
+      const uptime =
+        showStatus && nowMs ? formatSinceDuration(reading?.since ?? null, nowMs) : null;
+      return {
+        id: service.id,
+        name: service.name,
+        hasContainers: service.hasContainers,
+        status: showStatus ? (reading?.status ?? null) : null,
+        uptime,
+      };
+    }),
+  );
 
   const unauthorized = $derived(
     catalogQuery.error instanceof UnauthorizedError ? catalogQuery.error : null,
@@ -51,10 +84,50 @@
       <a href={application.url} data-testid="application-open-link" data-sveltekit-reload>
         {m.detail_open()}
       </a>
+      <div class="header-status" data-testid="application-header-status">
+        <StatusBadge status={applicationStatus?.status ?? null} />
+        {#if applicationUptime}
+          <span data-testid="application-uptime">{applicationUptime}</span>
+        {/if}
+      </div>
     </header>
 
-    <!-- Reserved for C5: per-service status and uptime. -->
-    <section data-testid="application-status-detail" aria-label={m.detail_status_label()}></section>
+    <section
+      data-testid="application-status-detail"
+      aria-label={m.detail_status_label()}
+    >
+      {#if serviceRows.length > 0}
+        <h2 class="services-heading" id="detail-services-heading">{m.detail_services_label()}</h2>
+        <ul
+          class="service-list"
+          data-testid="service-status-list"
+          role="listbox"
+          aria-labelledby="detail-services-heading"
+        >
+          {#each serviceRows as service (service.id)}
+            <li
+              class="service-row"
+              data-testid="service-status-row"
+              data-service-id={service.id}
+              data-has-containers={service.hasContainers ? 'true' : 'false'}
+              role="option"
+              aria-selected="false"
+              tabindex="0"
+            >
+              <span class="service-name">{service.name}</span>
+              {#if service.hasContainers}
+                <span class="service-status">
+                  <StatusBadge status={service.status} />
+                  {#if service.uptime}
+                    <span data-testid="service-uptime">{service.uptime}</span>
+                  {/if}
+                </span>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
   </article>
 {/if}
 
@@ -69,5 +142,54 @@
   .detail-header h1,
   .detail-header p {
     margin: 0;
+  }
+
+  .header-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .services-heading {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+  }
+
+  .service-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .service-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0.15rem;
+  }
+
+  .service-row:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .service-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .service-status {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
   }
 </style>
