@@ -24,10 +24,9 @@ describe('application icon assets', () => {
     for (const app of applications) {
       expect(app.icon, `application ${app.id ?? '(missing id)'} must declare icon`).toBeTruthy();
       const iconPath = join(iconsDir, app.icon!);
-      expect(
-        existsSync(iconPath),
-        `missing icon asset for ${app.id}: expected ${iconPath}`,
-      ).toBe(true);
+      expect(existsSync(iconPath), `missing icon asset for ${app.id}: expected ${iconPath}`).toBe(
+        true,
+      );
     }
   });
 

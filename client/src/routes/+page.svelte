@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { m } from '$lib/paraglide/messages.js';
+  import CatalogList from '$lib/components/CatalogList.svelte';
 </script>
 
-<main data-testid="list-placeholder">
-  <h1>{m.placeholder_list()}</h1>
+<main>
+  <CatalogList />
 </main>

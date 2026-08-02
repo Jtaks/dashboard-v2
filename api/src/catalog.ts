@@ -4,10 +4,7 @@ import type { ResolvedConfig, ResolvedServiceConfig } from './config.js';
 import { isAdmin } from './identity.js';
 
 /** True when any configured group appears in the user's Remote-Groups (OR). */
-export function groupsOverlap(
-  required: readonly string[],
-  userGroups: readonly string[],
-): boolean {
+export function groupsOverlap(required: readonly string[], userGroups: readonly string[]): boolean {
   return required.some((group) => userGroups.includes(group));
 }
 
@@ -27,17 +24,15 @@ function toService(service: ResolvedServiceConfig): Service {
 export function filterCatalog(config: ResolvedConfig, groups: readonly string[]): Catalog {
   if (isAdmin(groups, config.adminGroup)) {
     return {
-      applications: config.applications.map(
-        (app): Application => ({
-          id: app.id,
-          name: app.name,
-          description: app.description,
-          url: app.url,
-          icon: app.icon,
-          requestable: app.requestable,
-          services: app.services.map(toService),
-        }),
-      ),
+      applications: config.applications.map((app): Application => ({
+        id: app.id,
+        name: app.name,
+        description: app.description,
+        url: app.url,
+        icon: app.icon,
+        requestable: app.requestable,
+        services: app.services.map(toService),
+      })),
     };
   }
 

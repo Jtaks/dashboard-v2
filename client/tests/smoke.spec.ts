@@ -14,7 +14,15 @@ test('playwright harness serves the static client shell', async ({ page }) => {
     });
   });
 
+  await page.route('**/api/catalog', async (route) => {
+    await route.fulfill({
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ applications: [] }),
+    });
+  });
+
   await page.goto('/');
-  await expect(page.getByTestId('list-placeholder')).toBeVisible();
+  await expect(page.getByTestId('catalog-empty')).toBeVisible();
   await expect(page.getByRole('link', { name: 'dashboard' })).toBeVisible();
 });
