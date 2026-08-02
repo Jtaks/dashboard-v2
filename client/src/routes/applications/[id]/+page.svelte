@@ -74,7 +74,9 @@
 {:else}
   <article class="detail-page" data-testid="application-detail" data-app-id={application.id}>
     <header class="detail-header">
-      <h1 data-testid="application-name">{application.name}</h1>
+      <h1 data-testid="application-name" data-route-focus-target tabindex="-1">
+        {application.name}
+      </h1>
       <p data-testid="application-description">{application.description}</p>
       <!-- Application URLs are absolute external targets — never compiled into the client. -->
       <!-- prettier-ignore -->

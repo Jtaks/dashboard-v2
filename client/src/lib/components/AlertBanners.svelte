@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Alert } from '@dashboard/shared';
+  import { tick } from 'svelte';
   import { alertDismissLabel, severityLabel } from '$lib/alerts/messages.js';
   import {
     dismissAlertId,
@@ -25,8 +26,26 @@
 
   const visible = $derived((alerts ?? []).filter((alert) => !dismissed.includes(alert.id)));
 
-  function dismiss(id: string) {
+  /**
+   * Persist dismissal, then move focus to the next banner dismiss control or the
+   * named shell return target so keyboard users are not dropped onto <body>.
+   */
+  async function dismiss(id: string, button: HTMLButtonElement) {
+    const region = button.closest('[data-testid="alert-banners"]');
+    const banners = region
+      ? [...region.querySelectorAll<HTMLElement>('[data-testid="alert-banner"]')]
+      : [];
+    const index = banners.findIndex((banner) => banner.contains(button));
+    const neighbor =
+      (index >= 0 ? banners[index + 1] : undefined) ?? (index > 0 ? banners[index - 1] : undefined);
+    const neighborDismiss = neighbor?.querySelector<HTMLElement>('[data-testid="alert-dismiss"]');
+
     dismissed = dismissAlertId(id);
+    await tick();
+
+    const returnTarget =
+      neighborDismiss ?? document.querySelector<HTMLElement>('[data-testid="alert-focus-return"]');
+    returnTarget?.focus();
   }
 </script>
 
@@ -57,7 +76,7 @@
           class="alert-dismiss"
           data-testid="alert-dismiss"
           aria-label={alertDismissLabel()}
-          onclick={() => dismiss(alert.id)}
+          onclick={(event) => void dismiss(alert.id, event.currentTarget)}
         >
           {alertDismissLabel()}
         </button>

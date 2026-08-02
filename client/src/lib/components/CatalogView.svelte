@@ -48,7 +48,9 @@
 {:else}
   <section class="catalog" aria-labelledby="catalog-title">
     <header class="catalog-header" data-testid="catalog-header">
-      <h1 id="catalog-title">{m.nav_list()}</h1>
+      <h1 id="catalog-title" data-testid="route-focus-target" data-route-focus-target tabindex="-1">
+        {m.nav_list()}
+      </h1>
       <div class="catalog-header-tools">
         <!-- B4: search field — filter applies upstream of list/grid below. -->
         <CatalogSearch bind:value={searchQuery} />

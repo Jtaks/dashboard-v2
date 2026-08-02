@@ -21,7 +21,9 @@
 </script>
 
 <main data-testid="settings-page" class="settings-page">
-  <h1>{m.settings_title()}</h1>
+  <h1 data-testid="route-focus-target" data-route-focus-target tabindex="-1">
+    {m.settings_title()}
+  </h1>
 
   <div class="settings-sections">
     <SettingsSection id="notifications" heading={m.settings_section_notifications()}>

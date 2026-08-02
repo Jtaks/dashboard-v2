@@ -35,6 +35,12 @@ body {
   --severity-warning-tint: 14%;
 }
 
+/* Shared keyboard focus ring — G2 asserts a visible indicator at every Tab stop. */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

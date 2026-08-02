@@ -66,7 +66,7 @@
   <div data-testid="session-loading"></div>
 {:else if session}
   <header class="app-header">
-    <a href={resolve('/')}>{m.app_name()}</a>
+    <a href={resolve('/')} data-testid="alert-focus-return">{m.app_name()}</a>
     <nav aria-label={m.app_name()} class="app-nav">
       <a href={resolve('/')}>{m.nav_list()}</a>
       <a

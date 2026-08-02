@@ -181,7 +181,9 @@
   <Forbidden code={showForbidden.code} />
 {:else}
   <main data-testid="admin-page" class="admin-page">
-    <h1>{m.admin_title()}</h1>
+    <h1 data-testid="route-focus-target" data-route-focus-target tabindex="-1">
+      {m.admin_title()}
+    </h1>
 
     <section class="admin-alerts" aria-labelledby="admin-alerts-heading">
       <div class="admin-alerts-header">
