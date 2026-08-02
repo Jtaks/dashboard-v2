@@ -14,10 +14,6 @@ export const ErrorCodes = {
   internalError: 'internal_error',
 } as const;
 
-export function jsonError(
-  c: Context,
-  status: ContentfulStatusCode,
-  code: string,
-): Response {
+export function jsonError(c: Context, status: ContentfulStatusCode, code: string): Response {
   return c.json({ code } satisfies ApiErrorBody, status);
 }

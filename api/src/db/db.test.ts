@@ -161,9 +161,7 @@ describe('ensureDatabase / migrations', () => {
         (db.prepare('SELECT COUNT(*) AS n FROM push_subscription_topics').get() as { n: number }).n,
       ).toBe(2);
 
-      db.prepare('DELETE FROM push_subscriptions WHERE endpoint = ?').run(
-        'https://push.example/1',
-      );
+      db.prepare('DELETE FROM push_subscriptions WHERE endpoint = ?').run('https://push.example/1');
 
       expect(
         (db.prepare('SELECT COUNT(*) AS n FROM push_subscription_topics').get() as { n: number }).n,
@@ -259,9 +257,7 @@ describe('ensureDatabaseOrExit', () => {
         }),
       ).toThrow('exit 1');
       expect(exit).toHaveBeenCalledWith(1);
-      expect(error).toHaveBeenCalledWith(
-        expect.stringContaining('deliberate migration failure'),
-      );
+      expect(error).toHaveBeenCalledWith(expect.stringContaining('deliberate migration failure'));
 
       resetDatabaseForTests();
       const db = openDatabase(path);

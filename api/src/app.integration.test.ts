@@ -45,9 +45,7 @@ describe('API identity pipeline', () => {
     vi.restoreAllMocks();
   });
 
-  function app(
-    registerApi?: Parameters<typeof createApp>[0]['registerApi'],
-  ) {
+  function app(registerApi?: Parameters<typeof createApp>[0]['registerApi']) {
     return createApp({
       config,
       env: testEnv,

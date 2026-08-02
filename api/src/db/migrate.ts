@@ -29,9 +29,9 @@ export function runMigrations(
   db.exec(CREATE_MIGRATIONS_TABLE);
 
   const applied = new Set(
-    (
-      db.prepare('SELECT id FROM schema_migrations ORDER BY id').all() as Array<{ id: string }>
-    ).map((row) => row.id),
+    (db.prepare('SELECT id FROM schema_migrations ORDER BY id').all() as Array<{ id: string }>).map(
+      (row) => row.id,
+    ),
   );
 
   const insert = db.prepare(
