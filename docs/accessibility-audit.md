@@ -1,6 +1,6 @@
 # Visual accessibility audit (G3)
 
-Performed against the dashboard-v2 client on branch `grok-4.5`, covering the token centralization in `client/src/lib/styles/tokens.css` and the component wiring in `StatusBadge` / `AlertBanners`. Parent commit at audit time: `0aeedf50becd74f9b1c88b9b130e65c3dd3abf65`. Re-run when status/severity tokens or primary layout change.
+Performed against the dashboard-v2 client on branch `grok-4.5` at commit `0f63e63732e05ba55ee43621f240e0868688a4c0`, covering the token centralization in `client/src/lib/styles/tokens.css` and the component wiring in `StatusBadge` / `AlertBanners`. Re-run when status/severity tokens or primary layout change.
 
 Checker: WCAG 2.x relative-luminance contrast (`client/scripts/contrast-audit.mjs`). Surfaces assume light Canvas `#ffffff` (the app does not set a dark colour scheme).
 
