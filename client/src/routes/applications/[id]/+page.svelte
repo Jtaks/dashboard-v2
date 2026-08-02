@@ -54,10 +54,7 @@
     </header>
 
     <!-- Reserved for C5: per-service status and uptime. -->
-    <section
-      data-testid="application-status-detail"
-      aria-label={m.detail_status_label()}
-    ></section>
+    <section data-testid="application-status-detail" aria-label={m.detail_status_label()}></section>
   </article>
 {/if}
 

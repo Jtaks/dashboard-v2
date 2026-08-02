@@ -2,7 +2,9 @@ import type { Application } from '@dashboard/shared';
 import { describe, expect, it } from 'vitest';
 import { applicationMatchesQuery, filterApplicationsByQuery } from './search.js';
 
-function app(partial: Partial<Application> & Pick<Application, 'id' | 'name' | 'description'>): Application {
+function app(
+  partial: Partial<Application> & Pick<Application, 'id' | 'name' | 'description'>,
+): Application {
   return {
     url: `https://${partial.id}.example.test/`,
     icon: 'media.svg',
@@ -34,9 +36,9 @@ describe('applicationMatchesQuery', () => {
     expect(applicationMatchesQuery(catalog[0]!, 'MEDIA')).toBe(true);
     expect(applicationMatchesQuery(catalog[0]!, 'films')).toBe(true);
     expect(applicationMatchesQuery(catalog[1]!, 'DoCs')).toBe(true);
-    expect(applicationMatchesQuery(app({ id: 'x', name: 'MEDIA', description: 'FILMS' }), 'media')).toBe(
-      true,
-    );
+    expect(
+      applicationMatchesQuery(app({ id: 'x', name: 'MEDIA', description: 'FILMS' }), 'media'),
+    ).toBe(true);
     expect(
       applicationMatchesQuery(app({ id: 'x', name: 'MEDIA', description: 'FILMS' }), 'films'),
     ).toBe(true);

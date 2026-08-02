@@ -22,7 +22,12 @@
   <!-- Application URLs are absolute external targets — never compiled into the client. -->
   <!-- prettier-ignore -->
   <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-  <a href={application.url} data-testid="application-icon-link" data-sveltekit-reload class="icon-link">
+  <a
+    href={application.url}
+    data-testid="application-icon-link"
+    data-sveltekit-reload
+    class="icon-link"
+  >
     <img src={imgSrc} alt={application.name} width="48" height="48" onerror={onIconError} />
   </a>
   <a

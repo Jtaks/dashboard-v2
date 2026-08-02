@@ -95,9 +95,9 @@ test('switching to grid renders one tile per app without another catalog request
   await expect(page.getByTestId('catalog-list')).toHaveCount(0);
   expect(catalogCalls).toBe(1);
 
-  await expect(page.getByTestId('application-tile').nth(0).getByTestId('application-name')).toHaveText(
-    'Media',
-  );
+  await expect(
+    page.getByTestId('application-tile').nth(0).getByTestId('application-name'),
+  ).toHaveText('Media');
   await expect(
     page.getByTestId('application-tile').nth(0).getByTestId('application-description'),
   ).toHaveText('Films and series.');
