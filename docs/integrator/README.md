@@ -4,13 +4,13 @@ This project owns two images (`Dockerfile.client`, `Dockerfile.api`), a YAML cat
 
 Use these pages to bring the dashboard up without reading the source:
 
-| Document | Contents |
-| -------- | -------- |
-| [Prerequisites](./prerequisites.md) | What each external component must already provide |
-| [Configuration reference](./configuration.md) | Every YAML key the schema accepts |
-| [Environment variables](./environment.md) | Every variable the API reads |
-| [Packaging](./packaging.md) | Example compose file and Caddyfile fragment |
-| [First-run walkthrough](./walkthrough.md) | Empty directory → working dashboard |
+| Document                                      | Contents                                          |
+| --------------------------------------------- | ------------------------------------------------- |
+| [Prerequisites](./prerequisites.md)           | What each external component must already provide |
+| [Configuration reference](./configuration.md) | Every YAML key the schema accepts                 |
+| [Environment variables](./environment.md)     | Every variable the API reads                      |
+| [Packaging](./packaging.md)                   | Example compose file and Caddyfile fragment       |
+| [First-run walkthrough](./walkthrough.md)     | Empty directory → working dashboard               |
 
 ## Surprising rules (read these first)
 

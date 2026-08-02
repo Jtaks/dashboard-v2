@@ -24,33 +24,33 @@ applications.services.groups
 
 ## Root
 
-| Key | Type | Required | Default | When wrong |
-| --- | ---- | -------- | ------- | ---------- |
-| `adminGroup` | string | no | `system-admins` | Wrong type → startup exits non-zero with a zod path/message. A name that matches no Authelia group simply means nobody is treated as admin. |
-| `groups` | string[] | yes | — | Missing/wrong type → exit non-zero. This list is the topic vocabulary; see [Surprising rules](./README.md#surprising-rules-read-these-first). |
-| `applications` | object[] | yes | — | Missing/wrong type → exit non-zero. An empty array starts but shows no catalog. |
+| Key            | Type     | Required | Default         | When wrong                                                                                                                                    |
+| -------------- | -------- | -------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `adminGroup`   | string   | no       | `system-admins` | Wrong type → startup exits non-zero with a zod path/message. A name that matches no Authelia group simply means nobody is treated as admin.   |
+| `groups`       | string[] | yes      | —               | Missing/wrong type → exit non-zero. This list is the topic vocabulary; see [Surprising rules](./README.md#surprising-rules-read-these-first). |
+| `applications` | object[] | yes      | —               | Missing/wrong type → exit non-zero. An empty array starts but shows no catalog.                                                               |
 
 ## `applications[]`
 
-| Key | Type | Required | Default | When wrong |
-| --- | ---- | -------- | ------- | ---------- |
-| `id` | string | yes | — | Missing/wrong type → exit non-zero. Stable key used in URLs. |
-| `name` | string | yes | — | Missing/wrong type → exit non-zero. |
-| `description` | string | yes | — | Missing/wrong type → exit non-zero. |
-| `url` | string | yes | — | Missing/wrong type → exit non-zero. Example value: `https://media.example.com`. |
-| `icon` | string | yes | — | Missing/wrong type → exit non-zero. Resolved against `/icons/` in the client bundle (example: `media.svg`). |
-| `groups` | string[] | yes | — | Missing/wrong type → exit non-zero. A group not present in top-level `groups` → exit non-zero naming the application. Visibility is OR against `Remote-Groups`. |
-| `requestable` | boolean | no | `false` | Wrong type → exit non-zero. Carried for a deferred story; unused by current UI. |
-| `services` | object[] | yes | — | Missing/wrong type → exit non-zero. Empty array is legal (link with no status rows). |
+| Key           | Type     | Required | Default | When wrong                                                                                                                                                      |
+| ------------- | -------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | string   | yes      | —       | Missing/wrong type → exit non-zero. Stable key used in URLs.                                                                                                    |
+| `name`        | string   | yes      | —       | Missing/wrong type → exit non-zero.                                                                                                                             |
+| `description` | string   | yes      | —       | Missing/wrong type → exit non-zero.                                                                                                                             |
+| `url`         | string   | yes      | —       | Missing/wrong type → exit non-zero. Example value: `https://media.example.com`.                                                                                 |
+| `icon`        | string   | yes      | —       | Missing/wrong type → exit non-zero. Resolved against `/icons/` in the client bundle (example: `media.svg`).                                                     |
+| `groups`      | string[] | yes      | —       | Missing/wrong type → exit non-zero. A group not present in top-level `groups` → exit non-zero naming the application. Visibility is OR against `Remote-Groups`. |
+| `requestable` | boolean  | no       | `false` | Wrong type → exit non-zero. Carried for a deferred story; unused by current UI.                                                                                 |
+| `services`    | object[] | yes      | —       | Missing/wrong type → exit non-zero. Empty array is legal (link with no status rows).                                                                            |
 
 ## `applications[].services[]`
 
-| Key | Type | Required | Default | When wrong |
-| --- | ---- | -------- | ------- | ---------- |
-| `id` | string | yes | — | Missing/wrong type → exit non-zero. |
-| `name` | string | yes | — | Missing/wrong type → exit non-zero. |
-| `containers` | string[] | yes | — | Missing/wrong type → exit non-zero. Empty array is legal (link, status `null`). Entries are **literal** docker container names — set `container_name` in the target compose. A name that matches nothing is reported **down** and logged as a warning. |
-| `groups` | string[] | no | inherits the application's `groups` | Wrong type → exit non-zero. A group not in top-level `groups` → exit non-zero naming the service. When set, narrows visibility (OR). A service the user does not match is absent from their view and from status aggregated for them. |
+| Key          | Type     | Required | Default                             | When wrong                                                                                                                                                                                                                                             |
+| ------------ | -------- | -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`         | string   | yes      | —                                   | Missing/wrong type → exit non-zero.                                                                                                                                                                                                                    |
+| `name`       | string   | yes      | —                                   | Missing/wrong type → exit non-zero.                                                                                                                                                                                                                    |
+| `containers` | string[] | yes      | —                                   | Missing/wrong type → exit non-zero. Empty array is legal (link, status `null`). Entries are **literal** docker container names — set `container_name` in the target compose. A name that matches nothing is reported **down** and logged as a warning. |
+| `groups`     | string[] | no       | inherits the application's `groups` | Wrong type → exit non-zero. A group not in top-level `groups` → exit non-zero naming the service. When set, narrows visibility (OR). A service the user does not match is absent from their view and from status aggregated for them.                  |
 
 ## Validation behaviour (all keys)
 

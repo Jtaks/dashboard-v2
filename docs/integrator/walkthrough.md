@@ -8,11 +8,11 @@ Empty directory mindset → a dashboard that lists applications with status. Fol
 
 Record the outcome when you run it:
 
-| Field | Value |
-| ----- | ----- |
-| Executed by | _(integrator)_ |
-| Host / date | _(fill in)_ |
-| Result | _(working dashboard with catalog + status / failure notes)_ |
+| Field       | Value                                                       |
+| ----------- | ----------------------------------------------------------- |
+| Executed by | _(integrator)_                                              |
+| Host / date | _(fill in)_                                                 |
+| Result      | _(working dashboard with catalog + status / failure notes)_ |
 
 ## Steps
 

@@ -15,17 +15,17 @@ iOS delivers Web Push only to a home-screen PWA. Playwright cannot drive Safari'
 
 ### Result placeholder
 
-| Field        | Value                                      |
-| ------------ | ------------------------------------------ |
-| Date         | _TBD_                                      |
-| iOS version  | _TBD_                                      |
-| Device       | _TBD_                                      |
-| Build / image| _TBD_                                      |
-| Standalone opens | _pass / fail_                          |
-| SW registered    | _pass / fail_                          |
-| Push subscribe (PWA) | _pass / fail_                      |
-| Tab cannot subscribe | _pass / fail_ (expected)           |
-| Notes        |                                            |
+| Field                | Value                    |
+| -------------------- | ------------------------ |
+| Date                 | _TBD_                    |
+| iOS version          | _TBD_                    |
+| Device               | _TBD_                    |
+| Build / image        | _TBD_                    |
+| Standalone opens     | _pass / fail_            |
+| SW registered        | _pass / fail_            |
+| Push subscribe (PWA) | _pass / fail_            |
+| Tab cannot subscribe | _pass / fail_ (expected) |
+| Notes                |                          |
 
 ## Service worker cache updates after rebuild
 
