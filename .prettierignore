@@ -7,3 +7,7 @@ playwright-report
 test-results
 coverage
 api/src/fixtures/invalid.yaml
+client/src/lib/paraglide
+client/project.inlang/cache
+client/project.inlang/.meta.json
+client/project.inlang/README.md

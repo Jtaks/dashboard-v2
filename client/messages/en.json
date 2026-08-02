@@ -1,0 +1,17 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "app_name": "dashboard",
+  "nav_list": "Applications",
+  "nav_settings": "Settings",
+  "nav_admin": "Admin",
+  "nav_sign_out": "Sign out",
+  "sign_in": "Sign in",
+  "signed_out_title": "Signed out",
+  "signed_out_body": "Sign in to continue to the dashboard.",
+  "forbidden_title": "Access refused",
+  "forbidden_body": "You are signed in but do not have permission for this.",
+  "placeholder_list": "Application list placeholder",
+  "placeholder_detail": "Application detail placeholder",
+  "placeholder_settings": "Settings placeholder",
+  "placeholder_admin": "Admin placeholder"
+}

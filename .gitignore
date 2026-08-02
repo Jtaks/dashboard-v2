@@ -11,3 +11,8 @@ test-results
 .env
 .env.*
 !.env.example
+client/src/lib/paraglide
+client/project.inlang/cache
+client/project.inlang/.meta.json
+client/project.inlang/README.md
+

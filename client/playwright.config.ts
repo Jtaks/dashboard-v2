@@ -9,7 +9,14 @@ export default defineConfig({
   reporter: 'list',
   use: {
     ...devices['Desktop Chrome'],
+    baseURL: 'http://127.0.0.1:4173',
     headless: true,
+  },
+  webServer: {
+    command: 'pnpm build && pnpm preview --host 127.0.0.1 --port 4173 --strictPort',
+    port: 4173,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
   },
   projects: [
     {

@@ -5,22 +5,30 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "svelte-kit sync && vite build",
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide && svelte-kit sync && vite build",
     "preview": "vite preview",
-    "prepare": "svelte-kit sync",
-    "test": "playwright install chromium && playwright test",
-    "lint": "eslint ."
+    "prepare": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide && svelte-kit sync",
+    "check:messages": "vitest run src/lib/i18n/check-inline-strings.test.ts src/lib/i18n/src-clean.test.ts",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright install chromium && playwright test",
+    "test": "vitest run && playwright install chromium && playwright test",
+    "lint": "eslint . && vitest run src/lib/i18n/src-clean.test.ts"
   },
   "dependencies": {
-    "@dashboard/shared": "workspace:*"
+    "@dashboard/shared": "workspace:*",
+    "@inlang/paraglide-js": "^2.23.0",
+    "@tanstack/svelte-query": "^6.1.38"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.27.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
+    "eslint-plugin-svelte": "^3.22.0",
     "svelte": "^5.37.0",
+    "svelte-eslint-parser": "^1.8.0",
     "typescript": "^5.9.2",
-    "vite": "^7.0.6"
+    "vite": "^7.0.6",
+    "vitest": "^3.2.7"
   }
 }

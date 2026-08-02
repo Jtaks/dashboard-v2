@@ -8,11 +8,19 @@ const config = {
     adapter: adapter({
       pages: 'build',
       assets: 'build',
+      fallback: '200.html',
       precompress: false,
       strict: true,
     }),
     alias: {
       '@dashboard/shared': '../shared/src/index.ts',
+    },
+    paths: {
+      // Absolute asset URLs so the SPA fallback does not break deep routes.
+      relative: false,
+    },
+    serviceWorker: {
+      register: true,
     },
   },
 };

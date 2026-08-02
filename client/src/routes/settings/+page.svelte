@@ -2,6 +2,6 @@
   import { m } from '$lib/paraglide/messages.js';
 </script>
 
-<main data-testid="list-placeholder">
-  <h1>{m.placeholder_list()}</h1>
+<main data-testid="settings-placeholder">
+  <h1>{m.placeholder_settings()}</h1>
 </main>
