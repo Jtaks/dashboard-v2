@@ -4,4 +4,5 @@ packages:
   - shared
 
 allowBuilds:
+  better-sqlite3: true
   esbuild: true
