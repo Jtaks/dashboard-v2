@@ -1,13 +1,41 @@
-import type { Status } from '@dashboard/shared';
-import { Hono } from 'hono';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
-export const app = new Hono();
+import { startServer } from './server.js';
 
-app.get('/api/health', (c) => c.json({ status: 'ok' as const }));
+/**
+ * API package entry: compose HTTP after config load.
+ * Startup order in {@link startServer}: config → DB migrate (A5) → listen.
+ */
+export { createApp, type CreateAppOptions } from './app.js';
+export { startServer, type StartServerOptions } from './server.js';
+export { getConfig, loadConfig, loadConfigOrExit } from './config.js';
+export {
+  ensureDatabase,
+  ensureDatabaseOrExit,
+  getDb,
+  openDatabase,
+  resolveDatabasePath,
+  runMigrations,
+  DEFAULT_DATABASE_PATH,
+} from './db/index.js';
+export { loadEnv, loadEnvOrExit, type RuntimeEnv } from './env.js';
+export { createLogger, type Logger } from './logging.js';
+export { isAdmin, type Identity } from './identity.js';
+export { ErrorCodes, type ApiErrorBody } from './errors.js';
 
-/** Placeholder that keeps the shared contract wired into the API package. */
-export function describeStatus(status: Status): string {
-  return status;
+function isExecutedAsMain(): boolean {
+  const entry = process.argv[1];
+  if (!entry) {
+    return false;
+  }
+  try {
+    return fileURLToPath(import.meta.url) === resolve(entry);
+  } catch {
+    return false;
+  }
 }
 
-export default app;
+if (isExecutedAsMain()) {
+  void startServer();
+}
