@@ -7,6 +7,7 @@
   import Forbidden from '$lib/components/Forbidden.svelte';
   import SignedOut from '$lib/components/SignedOut.svelte';
   import { m } from '$lib/paraglide/messages.js';
+  import { statusQueryOptions } from '$lib/status/query.js';
   import type { Snippet } from 'svelte';
 
   let { children }: { children: Snippet } = $props();
@@ -17,10 +18,28 @@
     retry: false,
   }));
 
+  // C3: one shared status poll for the signed-in shell (C4/C5 subscribe to the same key).
+  const statusQuery = createQuery(() => ({
+    ...statusQueryOptions(),
+    enabled: Boolean(sessionQuery.data),
+  }));
+
   const session = $derived(sessionQuery.data as Session | undefined);
   const error = $derived(sessionQuery.error);
-  const unauthorized = $derived(error instanceof UnauthorizedError ? error : null);
-  const forbidden = $derived(error instanceof ForbiddenError ? error : null);
+  const unauthorized = $derived(
+    error instanceof UnauthorizedError
+      ? error
+      : statusQuery.error instanceof UnauthorizedError
+        ? statusQuery.error
+        : null,
+  );
+  const forbidden = $derived(
+    error instanceof ForbiddenError
+      ? error
+      : statusQuery.error instanceof ForbiddenError
+        ? statusQuery.error
+        : null,
+  );
 </script>
 
 {#if unauthorized}
