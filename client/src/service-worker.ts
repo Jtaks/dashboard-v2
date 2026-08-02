@@ -5,6 +5,8 @@ import { registerPushHandlers } from '$lib/push/handlers.js';
 const CACHE = `dashboard-shell-${version}`;
 const SHELL = [...build, ...files, ...prerendered];
 
+// Rebuilds change `version`, so activate drops prior shell caches and the new
+// worker (skipWaiting) serves the updated shell on the next load.
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
   self.skipWaiting();
