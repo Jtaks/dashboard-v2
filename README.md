@@ -10,6 +10,10 @@ An AI experiment.
 | `api`    | Node service (Hono)            |
 | `client` | SvelteKit static client        |
 
+## Integrator docs
+
+Deploying the two images behind an existing Caddy/Authelia stack: **[docs/integrator/](./docs/integrator/README.md)** (packaging examples under `deploy/`).
+
 ## Scripts
 
 From the repo root, after `pnpm install`:

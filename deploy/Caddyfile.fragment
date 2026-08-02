@@ -1,7 +1,7 @@
 # Fragment for the existing Caddy site that fronts the dashboard on one origin.
 # Merge into the site block that serves https://dashboard.example.com (or your host).
 #
-# Assumptions (see deploy/INTEGRATOR.md):
+# Assumptions (see docs/integrator/packaging.md):
 # - Authelia is reachable on the docker network as `authelia:9091`
 # - `dashboard-api` and `dashboard-client` container_name values match this fragment
 # - The socket proxy is not referenced here; the API reaches it via DOCKER_PROXY_URL
