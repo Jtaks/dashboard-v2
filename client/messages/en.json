@@ -71,6 +71,8 @@
   "settings_section_notifications": "Notifications",
   "settings_section_flags": "Feature flags",
   "settings_section_admin": "Administration",
+  "push_fallback_title": "Notification",
+  "push_fallback_body": "A notification could not be displayed.",
   "settings_flags_empty": "No feature flags are available for your account.",
   "settings_flag_on": "On",
   "settings_flag_off": "Off",

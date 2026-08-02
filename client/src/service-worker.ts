@@ -1,5 +1,6 @@
 /// <reference types="@sveltejs/kit" />
 import { build, files, prerendered, version } from '$service-worker';
+import { registerPushHandlers } from '$lib/push/handlers.js';
 
 const CACHE = `dashboard-shell-${version}`;
 const SHELL = [...build, ...files, ...prerendered];
@@ -34,6 +35,9 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(networkFirstShell(event.request));
 });
+
+// Push + notificationclick (F3). Shell caching above is unchanged from A6.
+registerPushHandlers(self as unknown as Parameters<typeof registerPushHandlers>[0]);
 
 async function networkFirstShell(request: Request): Promise<Response> {
   const cache = await caches.open(CACHE);
