@@ -1,3 +1,4 @@
+import type { StatusReport } from '@dashboard/shared';
 import { Hono } from 'hono';
 
 import type { ResolvedConfig } from './config.js';
@@ -11,7 +12,19 @@ import { originMiddleware } from './middleware/origin.js';
 import { adminTopicsHandler } from './routes/admin-topics.js';
 import { catalogHandler } from './routes/catalog.js';
 import { sessionHandler } from './routes/session.js';
+import { statusHandler } from './routes/status.js';
+import { createStatusCache, STATUS_CACHE_TTL_MS } from './status/cache.js';
+import { collectStatus } from './status/collect.js';
 import type { AppVariables } from './types.js';
+
+export type StatusAppOptions = {
+  /** Override unfiltered collection (tests). Default: collectStatus via DOCKER_PROXY_URL. */
+  collect?: () => Promise<StatusReport>;
+  /** Clock for the shared cache TTL (tests). Default Date.now. */
+  now?: () => number;
+  /** Cache window in ms. Default {@link STATUS_CACHE_TTL_MS}. */
+  ttlMs?: number;
+};
 
 export type CreateAppOptions = {
   config: ResolvedConfig;
@@ -22,6 +35,8 @@ export type CreateAppOptions = {
    * identity and origin middleware (used by integration tests for CSRF probes).
    */
   registerApi?: (api: Hono<{ Variables: AppVariables }>) => void;
+  /** Status collection / cache hooks (tests). */
+  status?: StatusAppOptions;
 };
 
 /**
@@ -31,6 +46,22 @@ export type CreateAppOptions = {
 export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVariables }> {
   const { config, env } = options;
   const logger = options.logger ?? createLogger(env.logLevel);
+
+  const collect =
+    options.status?.collect ??
+    (() =>
+      collectStatus(config, {
+        dockerProxyUrl: env.dockerProxyUrl,
+        logger: {
+          warn: (fields) => logger.warn(fields),
+        },
+      }));
+
+  const statusCache = createStatusCache({
+    collect,
+    now: options.status?.now,
+    ttlMs: options.status?.ttlMs ?? STATUS_CACHE_TTL_MS,
+  });
 
   const app = new Hono<{ Variables: AppVariables }>();
 
@@ -42,6 +73,7 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
 
   api.get('/session', sessionHandler(config.adminGroup, env.autheliaLogoutUrl));
   api.get('/catalog', catalogHandler(config));
+  api.get('/status', statusHandler(config, statusCache));
 
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));

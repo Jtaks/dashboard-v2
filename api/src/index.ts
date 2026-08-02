@@ -7,7 +7,7 @@ import { startServer } from './server.js';
  * API package entry: compose HTTP after config load.
  * Startup order in {@link startServer}: config → DB migrate (A5) → listen.
  */
-export { createApp, type CreateAppOptions } from './app.js';
+export { createApp, type CreateAppOptions, type StatusAppOptions } from './app.js';
 export { startServer, type StartServerOptions } from './server.js';
 export { getConfig, loadConfig, loadConfigOrExit } from './config.js';
 export {
@@ -25,8 +25,13 @@ export { isAdmin, type Identity } from './identity.js';
 export { ErrorCodes, type ApiErrorBody } from './errors.js';
 export {
   collectStatus,
+  createStatusCache,
+  filterStatusReport,
   sinceForAggregate,
+  STATUS_CACHE_TTL_MS,
   type CollectStatusOptions,
+  type StatusCache,
+  type StatusCacheOptions,
   type StatusCollectorLogger,
 } from './status/index.js';
 export {
@@ -36,7 +41,6 @@ export {
   type ContainerSnapshot,
   type DockerClient,
 } from './docker/index.js';
-
 function isExecutedAsMain(): boolean {
   const entry = process.argv[1];
   if (!entry) {
