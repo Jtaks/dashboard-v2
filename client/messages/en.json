@@ -62,6 +62,8 @@
   "severity_success": "Success",
   "severity_warning": "Warning",
   "severity_error": "Error",
+  "alerts_region": "Alerts",
+  "alert_dismiss": "Dismiss alert",
   "error_invalid_body": "The alert could not be saved. Check the fields and try again.",
   "error_not_found": "That alert no longer exists.",
   "error_request_failed": "Something went wrong. Try again.",

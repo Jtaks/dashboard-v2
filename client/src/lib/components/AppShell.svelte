@@ -5,6 +5,8 @@
   import Settings from '@lucide/svelte/icons/settings';
   import { ForbiddenError, UnauthorizedError } from '$lib/api/client.js';
   import { fetchSession, sessionQueryKey } from '$lib/auth/session.js';
+  import { alertsQueryOptions } from '$lib/alerts/query.js';
+  import AlertBanners from '$lib/components/AlertBanners.svelte';
   import Forbidden from '$lib/components/Forbidden.svelte';
   import SignedOut from '$lib/components/SignedOut.svelte';
   import { m } from '$lib/paraglide/messages.js';
@@ -25,6 +27,12 @@
     enabled: Boolean(sessionQuery.data),
   }));
 
+  // E3: targeted alerts for the banner (same enable gate as status).
+  const alertsQuery = createQuery(() => ({
+    ...alertsQueryOptions(),
+    enabled: Boolean(sessionQuery.data),
+  }));
+
   const session = $derived(sessionQuery.data as Session | undefined);
   const error = $derived(sessionQuery.error);
   const unauthorized = $derived(
@@ -32,15 +40,20 @@
       ? error
       : statusQuery.error instanceof UnauthorizedError
         ? statusQuery.error
-        : null,
+        : alertsQuery.error instanceof UnauthorizedError
+          ? alertsQuery.error
+          : null,
   );
   const forbidden = $derived(
     error instanceof ForbiddenError
       ? error
       : statusQuery.error instanceof ForbiddenError
         ? statusQuery.error
-        : null,
+        : alertsQuery.error instanceof ForbiddenError
+          ? alertsQuery.error
+          : null,
   );
+  const alerts = $derived(alertsQuery.data ?? null);
 </script>
 
 {#if unauthorized}
@@ -71,6 +84,7 @@
       >
     </nav>
   </header>
+  <AlertBanners alerts={alerts} />
   {@render children()}
 {:else}
   <SignedOut location={null} />
