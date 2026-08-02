@@ -41,13 +41,17 @@ stacks you list in config must do the same for every container you want status f
 1. Ensure the external network named `proxy` exists (or change `networks.proxy.name`
    in `compose.example.yaml`).
 2. Edit `deploy/config/dashboard.yaml` for your catalog.
-3. Set the compose environment values that have no TDD default:
+3. Replace `deploy/config/vapid.json` with integrator-generated VAPID keys
+   (`{ "publicKey", "privateKey" }`). The project neither generates nor stores
+   production keys; the example file is for local bring-up only. Mount path
+   defaults to `VAPID_KEYS_PATH` (`/config/vapid.json`).
+4. Set the compose environment values that have no TDD default:
    `ALLOWED_ORIGIN`, `AUTHELIA_LOGOUT_URL`, `DOCKER_PROXY_URL`, and
-   `VAPID_SUBJECT` (plus mount integrator-supplied keys at `VAPID_KEYS_PATH` when
-   enabling push).
-4. Apply `Caddyfile.fragment` to the existing Caddy site for the dashboard origin.
-5. From the repo root:
+   `VAPID_SUBJECT` (`mailto:` or `https:` contact required by web-push).
+5. Apply `Caddyfile.fragment` to the existing Caddy site for the dashboard origin.
+6. From the repo root:
    `docker compose -f deploy/compose.example.yaml up --build`
 
-The API starts with a mounted config and an empty `/data` volume. It exits
-non-zero with a logged error if the config file is missing or invalid.
+The API starts with a mounted config, VAPID keys, and an empty `/data` volume. It
+exits non-zero with a logged error if the config file, VAPID keys file, or
+`VAPID_SUBJECT` is missing or invalid — before the HTTP listener binds.

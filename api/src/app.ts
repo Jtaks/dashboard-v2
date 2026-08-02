@@ -18,6 +18,7 @@ import {
 import { adminTopicsHandler } from './routes/admin-topics.js';
 import { alertsHandler } from './routes/alerts.js';
 import { catalogHandler } from './routes/catalog.js';
+import { pushKeyHandler } from './routes/push-key.js';
 import { sessionHandler } from './routes/session.js';
 import { statusHandler } from './routes/status.js';
 import { createStatusCache, STATUS_CACHE_TTL_MS } from './status/cache.js';
@@ -37,6 +38,12 @@ export type CreateAppOptions = {
   config: ResolvedConfig;
   env: RuntimeEnv;
   logger?: Logger;
+  /**
+   * VAPID public key for `GET /api/push/key`.
+   * Omit in tests that do not exercise push so no real keys file is required.
+   * Production {@link startServer} always supplies this after {@link ensureVapidOrExit}.
+   */
+  vapidPublicKey?: string;
   /**
    * Extension/test hook: register extra routes on the `/api` sub-app after
    * identity and origin middleware (used by integration tests for CSRF probes).
@@ -82,6 +89,9 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   api.get('/catalog', catalogHandler(config));
   api.get('/status', statusHandler(config, statusCache));
   api.get('/alerts', alertsHandler());
+  if (options.vapidPublicKey !== undefined) {
+    api.get('/push/key', pushKeyHandler(options.vapidPublicKey));
+  }
 
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));

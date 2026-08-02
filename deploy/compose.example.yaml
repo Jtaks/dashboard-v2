@@ -14,6 +14,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./config/dashboard.yaml:/config/dashboard.yaml:ro
+      - ./config/vapid.json:/config/vapid.json:ro
       - dashboard-data:/data
     environment:
       # TDD Deployment — every variable listed; defaults shown where the TDD defines them.

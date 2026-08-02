@@ -5,7 +5,7 @@ import { startServer } from './server.js';
 
 /**
  * API package entry: compose HTTP after config load.
- * Startup order in {@link startServer}: config → DB migrate (A5) → listen.
+ * Startup order in {@link startServer}: config → DB migrate (A5) → VAPID (F1) → listen.
  */
 export { createApp, type CreateAppOptions, type StatusAppOptions } from './app.js';
 export { startServer, type StartServerOptions } from './server.js';
@@ -40,6 +40,30 @@ export {
   type CreateAlertBody,
   type PatchAlertBody,
 } from './alerts/index.js';
+export {
+  configureWebPush,
+  DEFAULT_VAPID_KEYS_PATH,
+  deleteSubscription,
+  ensureVapid,
+  ensureVapidOrExit,
+  getVapidConfig,
+  getVapidPublicKey,
+  listAllEndpoints,
+  listEndpointsByTopic,
+  listEndpointsByTopics,
+  listTopicsForEndpoint,
+  loadVapidKeys,
+  loadVapidSubject,
+  resetVapidForTests,
+  resolveVapidKeysPath,
+  rewriteTopics,
+  upsertSubscription,
+  VapidLoadError,
+  type PushSubscriptionRecord,
+  type UpsertPushSubscriptionInput,
+  type VapidConfig,
+  type VapidKeys,
+} from './push/index.js';
 export {
   collectStatus,
   createStatusCache,
