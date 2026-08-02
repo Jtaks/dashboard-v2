@@ -20,8 +20,7 @@
 
 <article data-testid="application-tile" data-app-id={application.id} class="tile">
   <!-- Application URLs are absolute external targets — never compiled into the client. -->
-  <!-- prettier-ignore -->
-  <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+  <!-- eslint-disable svelte/no-navigation-without-resolve -->
   <a
     href={application.url}
     data-testid="application-icon-link"
@@ -30,6 +29,7 @@
   >
     <img src={imgSrc} alt={application.name} width="64" height="64" onerror={onIconError} />
   </a>
+  <!-- eslint-enable svelte/no-navigation-without-resolve -->
   <a
     href={resolve('/applications/[id]', { id: application.id })}
     data-testid="application-detail-link"
