@@ -31,5 +31,9 @@
   "placeholder_list": "Application list placeholder",
   "placeholder_detail": "Application detail placeholder",
   "placeholder_settings": "Settings placeholder",
-  "placeholder_admin": "Admin placeholder"
+  "placeholder_admin": "Admin placeholder",
+  "settings_title": "Settings",
+  "settings_section_notifications": "Notifications",
+  "settings_section_flags": "Feature flags",
+  "settings_section_admin": "Administration"
 }

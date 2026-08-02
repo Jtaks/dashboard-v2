@@ -2,6 +2,7 @@
   import { resolve } from '$app/paths';
   import { createQuery } from '@tanstack/svelte-query';
   import type { Session } from '@dashboard/shared';
+  import Settings from '@lucide/svelte/icons/settings';
   import { ForbiddenError, UnauthorizedError } from '$lib/api/client.js';
   import { fetchSession, sessionQueryKey } from '$lib/auth/session.js';
   import Forbidden from '$lib/components/Forbidden.svelte';
@@ -49,11 +50,18 @@
 {:else if sessionQuery.isPending}
   <div data-testid="session-loading"></div>
 {:else if session}
-  <header>
+  <header class="app-header">
     <a href={resolve('/')}>{m.app_name()}</a>
-    <nav aria-label={m.app_name()}>
+    <nav aria-label={m.app_name()} class="app-nav">
       <a href={resolve('/')}>{m.nav_list()}</a>
-      <a href={resolve('/settings')}>{m.nav_settings()}</a>
+      <a
+        href={resolve('/settings')}
+        data-testid="nav-settings"
+        aria-label={m.nav_settings()}
+        class="nav-settings"
+      >
+        <Settings aria-hidden="true" size={18} />
+      </a>
       {#if session.admin}
         <a href={resolve('/admin')}>{m.nav_admin()}</a>
       {/if}
@@ -67,3 +75,31 @@
 {:else}
   <SignedOut location={null} />
 {/if}
+
+<style>
+  .app-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .app-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .nav-settings {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+  }
+</style>
