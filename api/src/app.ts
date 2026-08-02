@@ -19,6 +19,11 @@ import { adminTopicsHandler } from './routes/admin-topics.js';
 import { alertsHandler } from './routes/alerts.js';
 import { catalogHandler } from './routes/catalog.js';
 import { pushKeyHandler } from './routes/push-key.js';
+import {
+  pushSubscribeHandler,
+  pushUnsubscribeHandler,
+  type PushSubscriptionHandlerOptions,
+} from './routes/push-subscriptions.js';
 import { sessionHandler } from './routes/session.js';
 import { statusHandler } from './routes/status.js';
 import { createStatusCache, STATUS_CACHE_TTL_MS } from './status/cache.js';
@@ -44,6 +49,8 @@ export type CreateAppOptions = {
    * Production {@link startServer} always supplies this after {@link ensureVapidOrExit}.
    */
   vapidPublicKey?: string;
+  /** Clock override for push subscription timestamps (tests). */
+  push?: PushSubscriptionHandlerOptions;
   /**
    * Extension/test hook: register extra routes on the `/api` sub-app after
    * identity and origin middleware (used by integration tests for CSRF probes).
@@ -92,6 +99,8 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   if (options.vapidPublicKey !== undefined) {
     api.get('/push/key', pushKeyHandler(options.vapidPublicKey));
   }
+  api.post('/push/subscriptions', pushSubscribeHandler(options.push));
+  api.delete('/push/subscriptions', pushUnsubscribeHandler());
 
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));

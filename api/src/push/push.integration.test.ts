@@ -34,6 +34,14 @@ const testEnv: RuntimeEnv = {
   dockerProxyUrl: undefined,
 };
 
+const subscriptionBody = {
+  endpoint: 'https://push.example/device-1',
+  keys: {
+    p256dh: 'p256dh-key-value',
+    auth: 'auth-key-value',
+  },
+};
+
 function tempDbPath(): string {
   const dir = mkdtempSync(join(tmpdir(), 'dashboard-push-'));
   return join(dir, 'dashboard.db');
@@ -50,6 +58,14 @@ function remoteHeaders(overrides: Record<string, string> = {}): Record<string, s
     'Remote-Email': 'alice@example.com',
     'Remote-Name': 'Alice Example',
     ...overrides,
+  };
+}
+
+function mutatingHeaders(overrides: Record<string, string> = {}): Record<string, string> {
+  return {
+    ...remoteHeaders(overrides),
+    Origin: testEnv.allowedOrigin,
+    'Content-Type': 'application/json',
   };
 }
 
@@ -242,5 +258,211 @@ describe('GET /api/push/key', () => {
       .map(String)
       .join('\n');
     expect(all).not.toContain(TEST_PRIVATE_KEY);
+  });
+});
+
+describe('POST/DELETE /api/push/subscriptions', () => {
+  let config: ResolvedConfig;
+  let dbPath: string;
+  let clock: Date;
+
+  beforeEach(() => {
+    resetConfigForTests();
+    resetDatabaseForTests();
+    config = loadConfig(join(fixturesDir, 'valid.yaml'));
+    dbPath = tempDbPath();
+    ensureDatabase(dbPath);
+    clock = new Date('2026-03-01T10:00:00.000Z');
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    resetDatabaseForTests();
+    cleanupDbPath(dbPath);
+    resetConfigForTests();
+    vi.restoreAllMocks();
+  });
+
+  function app() {
+    return createApp({
+      config,
+      env: testEnv,
+      logger: createLogger('error'),
+      vapidPublicKey: TEST_PUBLIC_KEY,
+      push: { now: () => clock },
+    });
+  }
+
+  function subscriptionCount(): number {
+    return (
+      getDb().prepare(`SELECT COUNT(*) AS n FROM push_subscriptions`).get() as { n: number }
+    ).n;
+  }
+
+  it('upserts twice with one row, same created_at, later last_seen_at', async () => {
+    const first = await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({ 'Remote-Groups': 'media-users,system-admins' }),
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(first.status).toBe(204);
+
+    const rowAfterFirst = getDb()
+      .prepare(
+        `SELECT user_id, created_at, last_seen_at FROM push_subscriptions WHERE endpoint = ?`,
+      )
+      .get(subscriptionBody.endpoint) as {
+      user_id: string;
+      created_at: string;
+      last_seen_at: string;
+    };
+    expect(rowAfterFirst.created_at).toBe('2026-03-01T10:00:00.000Z');
+    expect(rowAfterFirst.last_seen_at).toBe('2026-03-01T10:00:00.000Z');
+
+    clock = new Date('2026-03-01T11:00:00.000Z');
+    const second = await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({ 'Remote-Groups': 'media-users,system-admins' }),
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(second.status).toBe(204);
+
+    const rowAfterSecond = getDb()
+      .prepare(
+        `SELECT user_id, created_at, last_seen_at FROM push_subscriptions WHERE endpoint = ?`,
+      )
+      .get(subscriptionBody.endpoint) as {
+      user_id: string;
+      created_at: string;
+      last_seen_at: string;
+    };
+    expect(subscriptionCount()).toBe(1);
+    expect(rowAfterSecond.created_at).toBe(rowAfterFirst.created_at);
+    expect(rowAfterSecond.last_seen_at).toBe('2026-03-01T11:00:00.000Z');
+  });
+
+  it('writes topics exactly from Remote-Groups and rewrites when groups shrink', async () => {
+    await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({ 'Remote-Groups': 'media-users,system-admins' }),
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(listTopicsForEndpoint(getDb(), subscriptionBody.endpoint)).toEqual([
+      'media-users',
+      'system-admins',
+    ]);
+
+    clock = new Date('2026-03-01T11:00:00.000Z');
+    await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({ 'Remote-Groups': 'media-users' }),
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(listTopicsForEndpoint(getDb(), subscriptionBody.endpoint)).toEqual(['media-users']);
+  });
+
+  it('hands the endpoint to a new user with that user id and topics', async () => {
+    await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({
+        'Remote-User': 'alice',
+        'Remote-Groups': 'media-users,system-admins',
+      }),
+      body: JSON.stringify(subscriptionBody),
+    });
+
+    clock = new Date('2026-03-01T12:00:00.000Z');
+    await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({
+        'Remote-User': 'bob',
+        'Remote-Groups': 'docs-users',
+        'Remote-Email': 'bob@example.com',
+        'Remote-Name': 'Bob Example',
+      }),
+      body: JSON.stringify(subscriptionBody),
+    });
+
+    const row = getDb()
+      .prepare(`SELECT user_id FROM push_subscriptions WHERE endpoint = ?`)
+      .get(subscriptionBody.endpoint) as { user_id: string };
+    expect(subscriptionCount()).toBe(1);
+    expect(row.user_id).toBe('bob');
+    expect(listTopicsForEndpoint(getDb(), subscriptionBody.endpoint)).toEqual(['docs-users']);
+  });
+
+  it('DELETE removes the row and topics; a second DELETE is still success', async () => {
+    await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders({ 'Remote-Groups': 'media-users,system-admins' }),
+      body: JSON.stringify(subscriptionBody),
+    });
+
+    const first = await app().request('/api/push/subscriptions', {
+      method: 'DELETE',
+      headers: mutatingHeaders(),
+      body: JSON.stringify({ endpoint: subscriptionBody.endpoint }),
+    });
+    expect(first.status).toBe(204);
+    expect(subscriptionCount()).toBe(0);
+    expect(
+      (
+        getDb().prepare(`SELECT COUNT(*) AS n FROM push_subscription_topics`).get() as {
+          n: number;
+        }
+      ).n,
+    ).toBe(0);
+
+    const second = await app().request('/api/push/subscriptions', {
+      method: 'DELETE',
+      headers: mutatingHeaders(),
+      body: JSON.stringify({ endpoint: subscriptionBody.endpoint }),
+    });
+    expect(second.status).toBe(204);
+  });
+
+  it('answers 401 without identity headers', async () => {
+    const res = await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: {
+        Origin: testEnv.allowedOrigin,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(res.status).toBe(401);
+    expect(await res.json()).toEqual({ code: ErrorCodes.unauthorized });
+    expect(subscriptionCount()).toBe(0);
+  });
+
+  it('refuses a foreign Origin and leaves the database untouched', async () => {
+    const res = await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: {
+        ...remoteHeaders({ 'Remote-Groups': 'media-users' }),
+        Origin: 'https://evil.example.com',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(subscriptionBody),
+    });
+    expect(res.status).toBe(403);
+    expect(await res.json()).toEqual({ code: ErrorCodes.invalidOrigin });
+    expect(subscriptionCount()).toBe(0);
+  });
+
+  it('rejects a body missing keys.auth and does not write', async () => {
+    const res = await app().request('/api/push/subscriptions', {
+      method: 'POST',
+      headers: mutatingHeaders(),
+      body: JSON.stringify({
+        endpoint: subscriptionBody.endpoint,
+        keys: { p256dh: subscriptionBody.keys.p256dh },
+      }),
+    });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ code: ErrorCodes.invalidBody });
+    expect(subscriptionCount()).toBe(0);
   });
 });

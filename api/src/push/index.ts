@@ -27,3 +27,10 @@ export {
   type PushSubscriptionRecord,
   type UpsertPushSubscriptionInput,
 } from './repository.js';
+
+export {
+  deletePushSubscriptionBodySchema,
+  pushSubscriptionBodySchema,
+  type DeletePushSubscriptionBody,
+  type PushSubscriptionBody,
+} from './validation.js';
