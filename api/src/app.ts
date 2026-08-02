@@ -15,6 +15,7 @@ import {
   adminListAlertsHandler,
   adminPatchAlertHandler,
 } from './routes/admin-alerts.js';
+import { adminPushHandler, type AdminPushHandlerOptions } from './routes/admin-push.js';
 import { adminTopicsHandler } from './routes/admin-topics.js';
 import { alertsHandler } from './routes/alerts.js';
 import { catalogHandler } from './routes/catalog.js';
@@ -51,6 +52,8 @@ export type CreateAppOptions = {
   vapidPublicKey?: string;
   /** Clock override for push subscription timestamps (tests). */
   push?: PushSubscriptionHandlerOptions;
+  /** Injectable web-push sender for admin push dispatch (tests). */
+  adminPush?: AdminPushHandlerOptions;
   /**
    * Extension/test hook: register extra routes on the `/api` sub-app after
    * identity and origin middleware (used by integration tests for CSRF probes).
@@ -109,6 +112,7 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   admin.post('/alerts', adminCreateAlertHandler(config.groups));
   admin.patch('/alerts/:id', adminPatchAlertHandler(config.groups));
   admin.delete('/alerts/:id', adminDeleteAlertHandler());
+  admin.post('/push', adminPushHandler(config.groups, options.adminPush));
   api.route('/admin', admin);
 
   options.registerApi?.(api);

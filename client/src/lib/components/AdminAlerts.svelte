@@ -17,6 +17,7 @@
   } from '$lib/admin/form.js';
   import { resolveApiErrorMessage, SEVERITIES, severityLabel } from '$lib/admin/messages.js';
   import { ApiRequestError, ForbiddenError } from '$lib/api/client.js';
+  import AdminPush from '$lib/components/AdminPush.svelte';
   import Forbidden from '$lib/components/Forbidden.svelte';
   import { m } from '$lib/paraglide/messages.js';
   import { adminTopicsQueryOptions } from '$lib/settings/admin-topics.js';
@@ -25,6 +26,8 @@
 
   const topicsQuery = createQuery(() => adminTopicsQueryOptions());
   const alertsQuery = createQuery(() => adminAlertsQueryOptions());
+
+  let pushForbidden = $state<ForbiddenError | null>(null);
 
   const forbidden = $derived(
     topicsQuery.error instanceof ForbiddenError
@@ -168,7 +171,7 @@
           : null,
   );
 
-  const showForbidden = $derived(forbidden ?? mutationForbidden);
+  const showForbidden = $derived(forbidden ?? mutationForbidden ?? pushForbidden);
   const busy = $derived(
     createAlertMutation.isPending ||
       patchAlertMutation.isPending ||
@@ -392,6 +395,8 @@
         {/if}
       {/if}
     </section>
+
+    <AdminPush bind:forbidden={pushForbidden} />
   </main>
 {/if}
 

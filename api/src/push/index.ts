@@ -34,3 +34,17 @@ export {
   type DeletePushSubscriptionBody,
   type PushSubscriptionBody,
 } from './validation.js';
+
+export { pushSendBodySchema, type PushSendBody } from './send-validation.js';
+
+export {
+  expandAudience,
+  resolvePushAudience,
+  type AudienceFixture,
+} from './audience.js';
+
+export {
+  dispatchPush,
+  type DispatchPushOptions,
+  type PushSender,
+} from './dispatch.js';
