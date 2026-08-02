@@ -9,6 +9,8 @@ export type RuntimeEnv = {
   logLevel: LogLevel;
   allowedOrigin: string;
   autheliaLogoutUrl: string;
+  /** Base URL of the read-only Docker socket proxy. Optional so unit tests need not set it. */
+  dockerProxyUrl: string | undefined;
 };
 
 export type EnvLogger = {
@@ -63,11 +65,15 @@ export function loadEnv(env: NodeJS.ProcessEnv = process.env): RuntimeEnv {
     throw new EnvLoadError(issues);
   }
 
+  const dockerProxyRaw = env.DOCKER_PROXY_URL?.trim();
+  const dockerProxyUrl = dockerProxyRaw ? dockerProxyRaw.replace(/\/+$/, '') : undefined;
+
   return {
     port,
     logLevel: logLevelRaw as LogLevel,
     allowedOrigin,
     autheliaLogoutUrl,
+    dockerProxyUrl,
   };
 }
 

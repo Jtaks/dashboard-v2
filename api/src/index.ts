@@ -23,6 +23,19 @@ export { loadEnv, loadEnvOrExit, type RuntimeEnv } from './env.js';
 export { createLogger, type Logger } from './logging.js';
 export { isAdmin, type Identity } from './identity.js';
 export { ErrorCodes, type ApiErrorBody } from './errors.js';
+export {
+  collectStatus,
+  sinceForAggregate,
+  type CollectStatusOptions,
+  type StatusCollectorLogger,
+} from './status/index.js';
+export {
+  createDockerClient,
+  DockerProxyError,
+  mapContainerStatus,
+  type ContainerSnapshot,
+  type DockerClient,
+} from './docker/index.js';
 
 function isExecutedAsMain(): boolean {
   const entry = process.argv[1];

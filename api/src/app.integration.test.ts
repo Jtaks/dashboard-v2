@@ -17,6 +17,7 @@ const testEnv: RuntimeEnv = {
   logLevel: 'error',
   allowedOrigin: 'https://dashboard.example.com',
   autheliaLogoutUrl: 'https://auth.example.com/logout',
+  dockerProxyUrl: undefined,
 };
 
 function remoteHeaders(overrides: Record<string, string> = {}): Record<string, string> {
