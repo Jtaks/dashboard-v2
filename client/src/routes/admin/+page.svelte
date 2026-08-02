@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { m } from '$lib/paraglide/messages.js';
+  import AdminAlerts from '$lib/components/AdminAlerts.svelte';
 </script>
 
-<main data-testid="admin-placeholder">
-  <h1>{m.placeholder_admin()}</h1>
-</main>
+<AdminAlerts />
