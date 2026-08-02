@@ -29,6 +29,8 @@ export function statusQueryOptions() {
   return queryOptions({
     queryKey: statusQueryKey,
     queryFn: fetchStatus,
+    // Keep readings fresh via the interval; extra C4/C5 subscribers must not refetch on mount.
+    staleTime: STATUS_REFETCH_INTERVAL_MS,
     refetchInterval: (query) =>
       isAuthFailure(query.state.error) ? false : STATUS_REFETCH_INTERVAL_MS,
     refetchIntervalInBackground: false,

@@ -11,8 +11,12 @@
   import SignedOut from '$lib/components/SignedOut.svelte';
   import ViewControl from '$lib/components/ViewControl.svelte';
   import { m } from '$lib/paraglide/messages.js';
+  import { readStatusQueryState, statusQueryOptions } from '$lib/status/query.js';
 
   const catalogQuery = createQuery(() => catalogQueryOptions());
+  // C3 shared status poll — one subscriber for the catalog; rows/tiles only read via accessors.
+  const statusQuery = createQuery(() => statusQueryOptions());
+  const statusReport = $derived(readStatusQueryState(statusQuery).report);
 
   // ssr is off; read once so the first paint matches localStorage.
   let view = $state<CatalogViewMode>(readCatalogView());
@@ -83,13 +87,13 @@
     {:else if view === 'list'}
       <ul data-testid="catalog-list">
         {#each filteredApplications as application (application.id)}
-          <ApplicationRow {application} />
+          <ApplicationRow {application} {statusReport} />
         {/each}
       </ul>
     {:else}
       <div data-testid="catalog-grid" class="catalog-grid">
         {#each filteredApplications as application (application.id)}
-          <ApplicationTile {application} />
+          <ApplicationTile {application} {statusReport} />
         {/each}
       </div>
     {/if}

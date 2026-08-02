@@ -40,5 +40,15 @@
   "settings_flag_on": "On",
   "settings_flag_off": "Off",
   "flag_status_summary_popover": "Show dependency status summaries as a hover popover instead of an inline expander",
-  "flag_admin_status_detail": "Show additional status detail controls in administration views"
+  "flag_admin_status_detail": "Show additional status detail controls in administration views",
+  "status_up": "Up",
+  "status_starting": "Starting",
+  "status_degraded": "Degraded",
+  "status_down": "Down",
+  "status_unknown": "Unknown",
+  "status_null": "No containers",
+  "status_summary_label": "Dependency status",
+  "status_summary_expand": "Show dependency status",
+  "status_summary_collapse": "Hide dependency status",
+  "status_summary_count": "{count} {label}"
 }

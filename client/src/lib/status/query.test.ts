@@ -99,6 +99,7 @@ describe('statusQueryOptions', () => {
     const options = statusQueryOptions();
     expect(options.queryKey).toEqual(statusQueryKey);
     expect(STATUS_REFETCH_INTERVAL_MS).toBe(7_000);
+    expect(options.staleTime).toBe(STATUS_REFETCH_INTERVAL_MS);
     expect(options.refetchIntervalInBackground).toBe(false);
     expect(options.retry).toBe(false);
   });
@@ -194,14 +195,12 @@ describe('statusQueryOptions', () => {
 
   it('stops polling after a 401 and surfaces UnauthorizedError', async () => {
     const location = 'https://auth.example/login';
-    fetchMock
-      .mockResolvedValueOnce(jsonResponse(200, reportA))
-      .mockResolvedValueOnce(
-        new Response(JSON.stringify({ code: 'unauthorized' }), {
-          status: 401,
-          headers: { Location: location, 'Content-Type': 'application/json' },
-        }),
-      );
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, reportA)).mockResolvedValueOnce(
+      new Response(JSON.stringify({ code: 'unauthorized' }), {
+        status: 401,
+        headers: { Location: location, 'Content-Type': 'application/json' },
+      }),
+    );
 
     const observer = new QueryObserver(client, statusQueryOptions());
     subscribe(observer);
