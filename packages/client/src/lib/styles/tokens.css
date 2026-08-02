@@ -1,0 +1,58 @@
+/**
+ * Status and severity colour tokens.
+ * Adjust here so badge, banner, and text presentations stay in sync.
+ */
+:root {
+  --surface-page: #ffffff;
+
+  /* Status — badge */
+  --status-up-badge-fg: #1b5e20;
+  --status-up-badge-bg: #e8f5e9;
+  --status-up-badge-border: #388e3c;
+
+  --status-starting-badge-fg: #0d47a1;
+  --status-starting-badge-bg: #e3f2fd;
+  --status-starting-badge-border: #1976d2;
+
+  --status-degraded-badge-fg: #c43e00;
+  --status-degraded-badge-bg: #fff3e0;
+  --status-degraded-badge-border: #c43e00;
+
+  --status-down-badge-fg: #b71c1c;
+  --status-down-badge-bg: #ffebee;
+  --status-down-badge-border: #d32f2f;
+
+  --status-unknown-badge-fg: #424242;
+  --status-unknown-badge-bg: #f5f5f5;
+  --status-unknown-badge-border: #757575;
+
+  /* Status — text on page surface */
+  --status-up-text: #1b5e20;
+  --status-starting-text: #0d47a1;
+  --status-degraded-text: #c43e00;
+  --status-down-text: #b71c1c;
+  --status-unknown-text: #424242;
+
+  /* Severity — banner */
+  --severity-info-banner-fg: #1a1a1a;
+  --severity-info-banner-bg: #e3f2fd;
+  --severity-info-banner-border: #1565c0;
+
+  --severity-success-banner-fg: #1a1a1a;
+  --severity-success-banner-bg: #e8f5e9;
+  --severity-success-banner-border: #2e7d32;
+
+  --severity-warning-banner-fg: #1a1a1a;
+  --severity-warning-banner-bg: #fff3e0;
+  --severity-warning-banner-border: #c43e00;
+
+  --severity-error-banner-fg: #1a1a1a;
+  --severity-error-banner-bg: #ffebee;
+  --severity-error-banner-border: #c62828;
+
+  /* Severity — text on page surface */
+  --severity-info-text: #1565c0;
+  --severity-success-text: #2e7d32;
+  --severity-warning-text: #c43e00;
+  --severity-error-text: #c62828;
+}

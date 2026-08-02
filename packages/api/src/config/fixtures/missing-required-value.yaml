@@ -1,0 +1,9 @@
+groups:
+  - app-users
+applications:
+  - id: app
+    name: App
+    description: Test application.
+    icon: app.svg
+    groups: [app-users]
+    services: []

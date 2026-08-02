@@ -1,0 +1,40 @@
+services:
+  dashboard-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: dashboard-client
+    networks:
+      - homelab
+    restart: unless-stopped
+
+  dashboard-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: dashboard-api
+    networks:
+      - homelab
+    restart: unless-stopped
+    environment:
+      # Defaults from TDD Deployment; replace example values before production.
+      CONFIG_PATH: /config/dashboard.yaml # default: /config/dashboard.yaml
+      DATABASE_PATH: /data/dashboard.db # default: /data/dashboard.db
+      VAPID_KEYS_PATH: /config/vapid.json # default: /config/vapid.json
+      VAPID_SUBJECT: mailto:admin@example.com # required; no default
+      DOCKER_PROXY_URL: http://socket-proxy:2375 # required; no default
+      ALLOWED_ORIGIN: https://dashboard.example.com # required; no default
+      AUTHELIA_LOGOUT_URL: https://auth.example.com/logout # required; no default
+      PORT: "3000" # default: 3000
+      LOG_LEVEL: info # default: info
+    volumes:
+      - ./config/dashboard.yaml:/config/dashboard.yaml:ro
+      - ./config/vapid.json:/config/vapid.json:ro
+      - dashboard-data:/data
+
+networks:
+  homelab:
+    external: true
+
+volumes:
+  dashboard-data:

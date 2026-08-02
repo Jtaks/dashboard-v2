@@ -1,0 +1,36 @@
+{
+  "name": "@dashboard/client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate-pwa-icons.mjs && vite build --config vite.service-worker.config.ts && vite build",
+    "build:sw-push": "vite build --config vite.service-worker.config.ts",
+    "dev": "vite dev",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync",
+    "test": "vitest run && playwright test",
+    "test:unit": "vite build --config vite.service-worker.config.ts && vitest run",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "@dashboard/shared": "workspace:*",
+    "@lucide/svelte": "^1.28.0",
+    "@tanstack/svelte-query": "^6.1.38"
+  },
+  "devDependencies": {
+    "@inlang/paraglide-js": "^2.23.0",
+    "@inlang/plugin-message-format": "^4.4.0",
+    "@playwright/test": "^1.54.2",
+    "@tanstack/query-core": "5.101.4",
+    "@sveltejs/adapter-static": "^3.0.9",
+    "@sveltejs/kit": "^2.27.0",
+    "@sveltejs/vite-plugin-svelte": "^6.1.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "svelte": "^5.37.3",
+    "svelte-check": "^4.3.0",
+    "vite": "^7.0.6",
+    "vitest": "^3.2.7",
+    "yaml": "^2.9.0"
+  }
+}

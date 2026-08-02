@@ -1,0 +1,22 @@
+# Caddyfile fragment for the dashboard client and API.
+# Merge into the site block that already terminates TLS for the dashboard origin.
+
+@dashboard_api path /api/*
+
+route @dashboard_api {
+	# Strip inbound identity headers before forward_auth runs.
+	header -Remote-User
+	header -Remote-Groups
+	header -Remote-Email
+	header -Remote-Name
+
+	forward_auth authelia:9091 {
+		uri /api/authz/forward-auth
+		copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+	}
+
+	reverse_proxy dashboard-api:3000
+}
+
+# Everything else is the unauthenticated static client.
+reverse_proxy dashboard-client:80

@@ -1,0 +1,32 @@
+adminGroup: system-admins
+groups:
+  - media-users
+  - media-admins
+applications:
+  - id: media
+    name: Media
+    description: Films and series (dev catalog).
+    url: https://media.example.com
+    icon: media.svg
+    groups: [media-users]
+    services:
+      - id: jellyfin
+        name: Jellyfin
+        containers: [jellyfin]
+      - id: db
+        name: Database
+        containers: [jellyfin-db]
+        groups: [media-admins]
+  - id: dashboard-dev
+    name: Dashboard Dev
+    description: Local compose services for this development environment.
+    url: http://localhost:8080
+    icon: placeholder.svg
+    groups: [media-users]
+    services:
+      - id: caddy
+        name: Caddy
+        containers: [dashboard-dev-caddy]
+      - id: socket-proxy
+        name: Docker Socket Proxy
+        containers: [dashboard-dev-socket-proxy]

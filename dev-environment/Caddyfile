@@ -1,0 +1,26 @@
+# Local reverse proxy: one origin for Vite + API, with hardcoded identity headers.
+# Browser origin: http://localhost:8080
+
+:8080 {
+	@api path /api/*
+
+	handle @api {
+		reverse_proxy host.docker.internal:3000 {
+			# Spoof protection: drop any client-supplied identity headers, then set fixed values.
+			header_up -Remote-User
+			header_up -Remote-Groups
+			header_up -Remote-Email
+			header_up -Remote-Name
+
+			header_up Remote-User admin
+			header_up Remote-Groups "system-admins,media-users,media-admins"
+			header_up Remote-Email admin@localhost
+			header_up Remote-Name "Local Admin"
+		}
+	}
+
+	handle {
+		# Vite HMR websockets are upgraded automatically by reverse_proxy.
+		reverse_proxy host.docker.internal:5173
+	}
+}

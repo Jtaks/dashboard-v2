@@ -1,0 +1,11 @@
+futureFeature: true
+groups:
+  - app-users
+applications:
+  - id: app
+    name: App
+    description: Test application.
+    url: https://app.example.com
+    icon: app.svg
+    groups: [app-users]
+    services: []

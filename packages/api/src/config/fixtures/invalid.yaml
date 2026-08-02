@@ -1,0 +1,4 @@
+groups:
+  - app-users
+applications: [
+  id: app
