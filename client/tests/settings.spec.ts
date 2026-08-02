@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { STORAGE_KEYS } from '@dashboard/shared';
 
 const logoutUrl = 'https://auth.example.test/logout';
 
@@ -102,4 +103,72 @@ test('settings route is usable at mobile width without horizontal scroll', async
     };
   });
   expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+});
+
+test('non-admin sees only non-admin flags; admin sees admin flags too', async ({ page }) => {
+  await stubSession(page, false);
+  await page.goto('/settings');
+
+  await expect(page.getByTestId('settings-flag-status-summary-popover')).toBeVisible();
+  await expect(page.getByTestId('settings-flag-admin-status-detail')).toHaveCount(0);
+
+  await stubSession(page, true);
+  await stubAdminTopics(page, 200, ['*']);
+  await page.goto('/settings');
+
+  await expect(page.getByTestId('settings-flag-status-summary-popover')).toBeVisible();
+  await expect(page.getByTestId('settings-flag-admin-status-detail')).toBeVisible();
+});
+
+test('feature flag keyboard toggle updates subscribers, storage, and survives reload', async ({
+  page,
+}) => {
+  await stubSession(page, false);
+  await page.goto('/settings');
+
+  const toggle = page.getByTestId('settings-flag-toggle-status-summary-popover');
+  const probe = page.getByTestId('flag-status-summary-popover-state');
+
+  await expect(toggle).toHaveAttribute('aria-checked', 'false');
+  await expect(probe).toHaveAttribute('data-enabled', 'false');
+
+  await toggle.focus();
+  await expect(toggle).toBeFocused();
+  await page.keyboard.press('Space');
+
+  await expect(toggle).toHaveAttribute('aria-checked', 'true');
+  await expect(probe).toHaveAttribute('data-enabled', 'true');
+
+  await expect
+    .poll(async () =>
+      page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.flags),
+    )
+    .toBe(JSON.stringify({ 'status-summary-popover': true }));
+
+  // Re-stub before reload so the session route stays fulfilled.
+  await stubSession(page, false);
+  await page.reload();
+
+  await expect(page.getByTestId('settings-page')).toBeVisible();
+  await expect(
+    page.getByTestId('settings-flag-toggle-status-summary-popover'),
+  ).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByTestId('flag-status-summary-popover-state')).toHaveAttribute(
+    'data-enabled',
+    'true',
+  );
+  expect(await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.flags)).toBe(
+    JSON.stringify({ 'status-summary-popover': true }),
+  );
+});
+
+test('list and grid are not among the feature flags', async ({ page }) => {
+  await stubSession(page, true);
+  await stubAdminTopics(page, 200, ['*']);
+  await page.goto('/settings');
+
+  await expect(page.getByTestId('settings-flags-list')).toBeVisible();
+  await expect(page.getByTestId('settings-flag-list')).toHaveCount(0);
+  await expect(page.getByTestId('settings-flag-grid')).toHaveCount(0);
+  await expect(page.getByTestId('settings-flag-view')).toHaveCount(0);
 });

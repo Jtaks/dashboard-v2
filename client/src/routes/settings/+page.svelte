@@ -3,6 +3,7 @@
   import type { Session } from '@dashboard/shared';
   import { fetchSession, sessionQueryKey } from '$lib/auth/session.js';
   import SettingsAdminSection from '$lib/components/SettingsAdminSection.svelte';
+  import SettingsFlagsSection from '$lib/components/SettingsFlagsSection.svelte';
   import SettingsSection from '$lib/components/SettingsSection.svelte';
   import { m } from '$lib/paraglide/messages.js';
   import { shouldShowAdminSection } from '$lib/settings/admin.js';
@@ -25,8 +26,9 @@
     <!-- F5 mounts notification subscription controls into this section. -->
     <SettingsSection id="notifications" heading={m.settings_section_notifications()} />
 
-    <!-- D2 mounts the feature flag list into this section. -->
-    <SettingsSection id="flags" heading={m.settings_section_flags()} />
+    <SettingsSection id="flags" heading={m.settings_section_flags()}>
+      <SettingsFlagsSection {session} />
+    </SettingsSection>
 
     {#if showAdmin}
       <SettingsAdminSection />

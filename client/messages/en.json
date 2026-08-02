@@ -35,5 +35,10 @@
   "settings_title": "Settings",
   "settings_section_notifications": "Notifications",
   "settings_section_flags": "Feature flags",
-  "settings_section_admin": "Administration"
+  "settings_section_admin": "Administration",
+  "settings_flags_empty": "No feature flags are available for your account.",
+  "settings_flag_on": "On",
+  "settings_flag_off": "Off",
+  "flag_status_summary_popover": "Show dependency status summaries as a hover popover instead of an inline expander",
+  "flag_admin_status_detail": "Show additional status detail controls in administration views"
 }
