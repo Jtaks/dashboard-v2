@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import type { Application } from '@dashboard/shared';
   import { PLACEHOLDER_ICON_SRC, resolveIconSrc } from '$lib/catalog/icon.js';
 
@@ -24,10 +25,14 @@
   <a href={application.url} data-testid="application-icon-link" data-sveltekit-reload class="icon-link">
     <img src={imgSrc} alt={application.name} width="64" height="64" onerror={onIconError} />
   </a>
-  <div class="copy">
+  <a
+    href={resolve('/applications/[id]', { id: application.id })}
+    data-testid="application-detail-link"
+    class="detail-link"
+  >
     <p data-testid="application-name">{application.name}</p>
     <p data-testid="application-description">{application.description}</p>
-  </div>
+  </a>
 </article>
 
 <style>
@@ -48,13 +53,15 @@
     display: block;
   }
 
-  .copy {
+  .detail-link {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    color: inherit;
+    text-decoration: none;
   }
 
-  .copy p {
+  .detail-link p {
     margin: 0;
   }
 </style>

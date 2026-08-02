@@ -201,20 +201,33 @@ test('keyboard traversal reaches every icon link in row order and activates it',
   await page.goto('/');
   await expect(page.getByTestId('catalog-list')).toBeVisible();
 
+  const rows = page.getByTestId('application-row');
   const iconLinks = page.getByTestId('application-icon-link');
+  const detailLinks = page.getByTestId('application-detail-link');
   await expect(iconLinks).toHaveCount(3);
+  await expect(detailLinks).toHaveCount(3);
 
+  // Tab order per row: icon (external) then detail body — distinct destinations.
   await iconLinks.nth(0).focus();
   await expect(iconLinks.nth(0)).toBeFocused();
 
   await page.keyboard.press('Tab');
+  await expect(detailLinks.nth(0)).toBeFocused();
+
+  await page.keyboard.press('Tab');
   await expect(iconLinks.nth(1)).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await expect(detailLinks.nth(1)).toBeFocused();
 
   await page.keyboard.press('Tab');
   await expect(iconLinks.nth(2)).toBeFocused();
 
   await page.keyboard.press('Shift+Tab');
-  await expect(iconLinks.nth(1)).toBeFocused();
+  await expect(detailLinks.nth(1)).toBeFocused();
+
+  await iconLinks.nth(1).focus();
+  await expect(rows.nth(1).getByTestId('application-icon-link')).toBeFocused();
 
   await Promise.all([page.waitForURL('https://docs.example.test/'), page.keyboard.press('Enter')]);
   await expect(page.getByRole('heading', { name: 'docs app' })).toBeVisible();
