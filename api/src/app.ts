@@ -16,6 +16,7 @@ import {
   adminPatchAlertHandler,
 } from './routes/admin-alerts.js';
 import { adminTopicsHandler } from './routes/admin-topics.js';
+import { alertsHandler } from './routes/alerts.js';
 import { catalogHandler } from './routes/catalog.js';
 import { sessionHandler } from './routes/session.js';
 import { statusHandler } from './routes/status.js';
@@ -80,6 +81,7 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   api.get('/session', sessionHandler(config.adminGroup, env.autheliaLogoutUrl));
   api.get('/catalog', catalogHandler(config));
   api.get('/status', statusHandler(config, statusCache));
+  api.get('/alerts', alertsHandler());
 
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));

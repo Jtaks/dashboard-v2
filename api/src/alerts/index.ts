@@ -10,6 +10,8 @@ export {
   type UpdateAlertInput,
 } from './repository.js';
 
+export { filterAlertsForUser, isAlertVisible } from './filter.js';
+
 export {
   SEVERITIES,
   createAlertBodySchema,
