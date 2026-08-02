@@ -122,7 +122,7 @@
     },
   }));
 
-  function submitForm(event: Event) {
+  function submitForm(event: SubmitEvent) {
     event.preventDefault();
     formError = null;
 
