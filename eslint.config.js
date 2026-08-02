@@ -14,6 +14,7 @@ export default tseslint.config(
       '**/test-results/**',
       '**/src/lib/paraglide/**',
       '**/project.inlang/**',
+      '**/scripts/**',
     ],
   },
   eslint.configs.recommended,
