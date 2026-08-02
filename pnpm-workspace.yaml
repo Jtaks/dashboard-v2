@@ -1,0 +1,7 @@
+packages:
+  - api
+  - client
+  - shared
+
+allowBuilds:
+  esbuild: true
