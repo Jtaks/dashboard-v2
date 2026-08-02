@@ -9,6 +9,7 @@ import { identityMiddleware } from './middleware/identity.js';
 import { requestLoggingMiddleware } from './middleware/logging.js';
 import { originMiddleware } from './middleware/origin.js';
 import { adminTopicsHandler } from './routes/admin-topics.js';
+import { catalogHandler } from './routes/catalog.js';
 import { sessionHandler } from './routes/session.js';
 import type { AppVariables } from './types.js';
 
@@ -40,6 +41,7 @@ export function createApp(options: CreateAppOptions): Hono<{ Variables: AppVaria
   api.use('*', originMiddleware(env.allowedOrigin));
 
   api.get('/session', sessionHandler(config.adminGroup, env.autheliaLogoutUrl));
+  api.get('/catalog', catalogHandler(config));
 
   const admin = new Hono<{ Variables: AppVariables }>();
   admin.use('*', adminGuard(config.adminGroup));

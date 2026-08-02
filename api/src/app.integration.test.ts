@@ -1,6 +1,6 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Session } from '@dashboard/shared';
+import type { Catalog, Session } from '@dashboard/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createApp } from './app.js';
@@ -186,6 +186,85 @@ describe('API identity pipeline', () => {
       expect(body).toEqual({ code: ErrorCodes.notFound });
       expect(JSON.stringify(body)).not.toMatch(/<html/i);
     });
+  });
+});
+
+describe('GET /api/catalog', () => {
+  let config: ResolvedConfig;
+
+  beforeEach(() => {
+    resetConfigForTests();
+    config = loadConfig(join(fixturesDir, 'catalog.yaml'));
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    resetConfigForTests();
+    vi.restoreAllMocks();
+  });
+
+  function app() {
+    return createApp({
+      config,
+      env: testEnv,
+      logger: createLogger('error'),
+    });
+  }
+
+  it('answers 401 before any catalog data is serialised when identity is missing', async () => {
+    const res = await app().request('/api/catalog');
+
+    expect(res.status).toBe(401);
+    expect(await res.json()).toEqual({ code: ErrorCodes.unauthorized });
+  });
+
+  it('returns only entitled applications and omits narrowed services', async () => {
+    const res = await app().request('/api/catalog', {
+      headers: remoteHeaders({ 'Remote-Groups': 'media-users' }),
+    });
+
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Catalog;
+    expect(body.applications.map((a) => a.id)).toEqual(['media']);
+    expect(body.applications[0]?.services.map((s) => s.id)).toEqual(['jellyfin', 'docs-link']);
+    expect(body.applications[0]?.services.find((s) => s.id === 'docs-link')?.hasContainers).toBe(
+      false,
+    );
+    expect(body.applications[0]?.services.find((s) => s.id === 'jellyfin')?.hasContainers).toBe(
+      true,
+    );
+
+    const serialized = JSON.stringify(body);
+    expect(serialized).not.toContain('jellyfin-db');
+    expect(serialized).not.toContain('"containers"');
+    expect(serialized).not.toContain('"status"');
+  });
+
+  it('returns every application and service for an admin', async () => {
+    const res = await app().request('/api/catalog', {
+      headers: remoteHeaders({ 'Remote-Groups': 'system-admins' }),
+    });
+
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Catalog;
+    expect(body.applications.map((a) => a.id)).toEqual(['media', 'docs']);
+    expect(body.applications[0]?.services.map((s) => s.id)).toEqual([
+      'jellyfin',
+      'db',
+      'docs-link',
+    ]);
+    expect(body.applications[1]?.requestable).toBe(true);
+  });
+
+  it('returns an empty applications array when no configured group matches', async () => {
+    const res = await app().request('/api/catalog', {
+      headers: remoteHeaders({ 'Remote-Groups': 'nobody' }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ applications: [] });
   });
 });
 
