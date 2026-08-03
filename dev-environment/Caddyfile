@@ -1,0 +1,36 @@
+# Dev reverse proxy: one origin, no Authelia.
+# Strips inbound Remote-* then injects fixed identity for every /api request.
+# Upstream is pnpm on the Docker host (client :5173, API :3000).
+#
+# Caddy 2.9.1 rejects request_header { block } form — use one directive per line.
+# Quote placeholders like "{host}" so Caddyfile does not treat { } as blocks.
+
+:80 {
+	@dashboard_api path /api /api/*
+
+	handle @dashboard_api {
+		request_header -Remote-User
+		request_header -Remote-Groups
+		request_header -Remote-Email
+		request_header -Remote-Name
+		request_header Remote-User "dev"
+		request_header Remote-Groups "system-admins,media-users,media-admins"
+		request_header Remote-Email "dev@localhost"
+		request_header Remote-Name "Dev User"
+
+		reverse_proxy host.docker.internal:3000 {
+			header_up Host "{host}"
+			header_up X-Forwarded-Host "{host}"
+			header_up X-Forwarded-Proto "{scheme}"
+		}
+	}
+
+	handle {
+		# Preserve the browser Host so Vite HMR / asset URLs stay on :8080.
+		reverse_proxy host.docker.internal:5173 {
+			header_up Host "{host}"
+			header_up X-Forwarded-Host "{host}"
+			header_up X-Forwarded-Proto "{scheme}"
+		}
+	}
+}

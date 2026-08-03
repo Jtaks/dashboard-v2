@@ -7,9 +7,11 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsc --watch",
+    "dev": "tsc --watch --preserveWatchOutput",
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:dev": "node --env-file=../dev-environment/api.env dist/index.js",
+    "start:dev:watch": "nodemon --watch dist --watch ../shared/dist --ext js --delay 500ms --exec \"node --env-file=../dev-environment/api.env dist/index.js\"",
     "test": "vitest run",
     "lint": "eslint ."
   },
@@ -26,6 +28,7 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^26.1.2",
     "@types/web-push": "^3.6.4",
+    "nodemon": "^3.1.14",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }

@@ -15,4 +15,6 @@ client/src/lib/paraglide
 client/project.inlang/cache
 client/project.inlang/.meta.json
 client/project.inlang/README.md
+dev-environment/data/*
+!dev-environment/data/.gitkeep
 

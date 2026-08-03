@@ -17,12 +17,12 @@ export type StatusCollectorLogger = {
 
 export type CollectStatusOptions = {
   /** Socket proxy base URL. Required unless `docker` is injected. */
-  dockerProxyUrl?: string;
+  dockerProxyUrl?: string | undefined;
   /** Injected client for tests. */
-  docker?: DockerClient;
-  logger?: StatusCollectorLogger;
+  docker?: DockerClient | undefined;
+  logger?: StatusCollectorLogger | undefined;
   /** Fixed clock for collectedAt in tests. */
-  now?: () => Date;
+  now?: (() => Date) | undefined;
 };
 
 type Reading = {
@@ -59,11 +59,12 @@ export function sinceForAggregate(
 
 function readingFromSnapshot(snapshot: ContainerSnapshot | null): Reading {
   const status = mapContainerStatus(snapshot);
+  // mapContainerStatus never returns unknown; keep the guard for Status exhaustiveness.
   if (status === 'unknown') {
     return { status, since: null };
   }
   const since = snapshot ? normalizeStartedAt(snapshot.startedAt) : null;
-  return { status, since: status === 'unknown' ? null : since };
+  return { status, since };
 }
 
 function aggregateReadings(readings: readonly Reading[]): {

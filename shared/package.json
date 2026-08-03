@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "tsc --watch",
+    "dev": "tsc --watch --preserveWatchOutput",
     "build": "tsc",
     "test": "vitest run",
     "lint": "eslint ."

@@ -1,0 +1,64 @@
+# Local development edge stack for dashboard-v2.
+#
+# Proxies browser traffic to pnpm-run client (5173) and API (3000) on the host,
+# injects fixed Remote-* identity headers (no Authelia), and exposes a read-only
+# Docker socket proxy for status collection.
+#
+# Usage (from repo root):
+#   pnpm dev:local
+#
+# Or stepwise:
+#   docker compose -f dev-environment/compose.yaml up -d
+#   pnpm --filter @dashboard/client dev
+#   pnpm --filter @dashboard/api build && pnpm --filter @dashboard/api start:dev
+#   open http://localhost:8080
+
+name: dashboard-dev
+
+services:
+  caddy:
+    image: caddy:2.9-alpine
+    container_name: dashboard-dev-caddy
+    ports:
+      - '8080:80'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
+
+  socket-proxy:
+    image: 11notes/socket-proxy:2.1.7
+    container_name: dashboard-dev-socket-proxy
+    read_only: true
+    # Root + docker group so the proxy can open the host socket; adjust GID if the
+    # image logs a different ownership (see 11notes/docker-socket-proxy README).
+    user: '0:0'
+    volumes:
+      - /var/run/docker.sock:/run/docker.sock:ro
+      - socket-proxy-run:/run/proxy
+    ports:
+      # Host-only publish — the API on the host uses DOCKER_PROXY_URL=http://127.0.0.1:2375
+      - '127.0.0.1:2375:2375'
+    restart: unless-stopped
+
+  # Dummy targets listed in dashboard.yaml — literal container_name values.
+  jellyfin:
+    image: alpine:3.21
+    container_name: jellyfin
+    command: ['sleep', 'infinity']
+    restart: unless-stopped
+
+  jellyfin-db:
+    image: alpine:3.21
+    container_name: jellyfin-db
+    command: ['sleep', 'infinity']
+    healthcheck:
+      test: ['CMD', 'true']
+      interval: 10s
+      timeout: 3s
+      retries: 1
+    restart: unless-stopped
+
+volumes:
+  socket-proxy-run:

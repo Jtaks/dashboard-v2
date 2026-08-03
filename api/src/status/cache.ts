@@ -7,9 +7,9 @@ export type StatusCacheOptions = {
   /** Performs one unfiltered collection. */
   collect: () => Promise<StatusReport>;
   /** Clock for TTL checks (tests). Default Date.now. */
-  now?: () => number;
+  now?: (() => number) | undefined;
   /** Cache window in ms. Default {@link STATUS_CACHE_TTL_MS}. */
-  ttlMs?: number;
+  ttlMs?: number | undefined;
 };
 
 export type StatusCache = {
